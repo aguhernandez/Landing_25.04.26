@@ -1,0 +1,160 @@
+export type Language = 'en' | 'es' | 'de';
+
+export const cookieTranslations = {
+  en: {
+    heading: 'We use cookies to perform better.',
+    body: 'To provide the best experiences, we use technologies like cookies to store and/or access device information. Consenting to these technologies will allow us to process data such as browsing behavior or unique IDs on this site. Not consenting or withdrawing consent, is considered as consented, but may adversely affect certain features and functions.',
+    cookiesPrivacy: 'Cookies Privacy',
+    privacyPolicy: 'Privacy Policy',
+    accept: 'Accept',
+    deny: 'Deny',
+    customize: 'Customize',
+    saveCustomize: 'Save preferences',
+    showDetails: 'Show details',
+    hideDetails: 'Hide details',
+    generalIntro: {
+      title: 'General cookie introduction',
+      p1: 'Cookies are small text files that can be used by websites to make a user\'s experience more efficient.',
+      p2: 'The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission.',
+      p3: 'This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.',
+      p4: 'You can at any time change or withdraw your consent from the Cookie Declaration on our website.',
+      p5: 'Learn more about who we are, how you can contact us and how we process personal data in our Privacy Policy.',
+      p6: 'Please state your consent ID and date when you contact us regarding your consent.',
+    },
+    categories: {
+      necessary: {
+        title: 'Necessary',
+        description: 'Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies.',
+        alwaysActive: 'Always active',
+      },
+      statistics: {
+        title: 'Statistics',
+        description: 'Statistic cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously.',
+      },
+      preferences: {
+        title: 'Preference',
+        description: 'Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in.',
+      },
+      marketing: {
+        title: 'Marketing',
+        description: 'Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers.',
+      },
+      unclassified: {
+        title: 'Unclassified',
+        description: 'Unclassified cookies are cookies that we are in the process of classifying, together with the providers of individual cookies.',
+      },
+    },
+    privacyTrigger: {
+      cookieSettings: 'Cookie settings',
+      yourState: 'Your current state',
+      consentDate: 'Consent date',
+      consentId: 'Your consent ID',
+      changeConsent: 'Change your consent',
+      withdrawConsent: 'Withdraw your consent',
+    },
+  },
+  es: {
+    heading: 'Usamos cookies para mejorar tu experiencia.',
+    body: 'Para brindar las mejores experiencias, utilizamos tecnologías como cookies para almacenar y/o acceder a información del dispositivo. Consentir estas tecnologías nos permitirá procesar datos como el comportamiento de navegación o identificadores únicos en este sitio. No consentir o retirar el consentimiento se considera como consentido, pero puede afectar negativamente a ciertas funciones y características.',
+    cookiesPrivacy: 'Privacidad de Cookies',
+    privacyPolicy: 'Política de Privacidad',
+    accept: 'Aceptar',
+    deny: 'Rechazar',
+    customize: 'Personalizar',
+    saveCustomize: 'Guardar preferencias',
+    showDetails: 'Mostrar detalles',
+    hideDetails: 'Ocultar detalles',
+    generalIntro: {
+      title: 'Introducción general a las cookies',
+      p1: 'Las cookies son pequeños archivos de texto que los sitios web pueden utilizar para mejorar la experiencia del usuario.',
+      p2: 'La ley establece que podemos almacenar cookies en tu dispositivo si son estrictamente necesarias para el funcionamiento de este sitio. Para todos los demás tipos de cookies necesitamos tu permiso.',
+      p3: 'Este sitio utiliza diferentes tipos de cookies. Algunas cookies son colocadas por servicios de terceros que aparecen en nuestras páginas.',
+      p4: 'En cualquier momento puedes cambiar o retirar tu consentimiento desde la Declaración de Cookies en nuestro sitio web.',
+      p5: 'Obtén más información sobre quiénes somos, cómo puedes contactarnos y cómo procesamos datos personales en nuestra Política de Privacidad.',
+      p6: 'Por favor indica tu ID de consentimiento y la fecha cuando te pongas en contacto con nosotros sobre tu consentimiento.',
+    },
+    categories: {
+      necessary: {
+        title: 'Necesarias',
+        description: 'Las cookies necesarias ayudan a que un sitio web sea utilizable al habilitar funciones básicas como la navegación de páginas y el acceso a áreas seguras del sitio web. El sitio web no puede funcionar correctamente sin estas cookies.',
+        alwaysActive: 'Siempre activo',
+      },
+      statistics: {
+        title: 'Estadísticas',
+        description: 'Las cookies de estadísticas ayudan a los propietarios de sitios web a entender cómo los visitantes interactúan con los sitios web recopilando e informando información de forma anónima.',
+      },
+      preferences: {
+        title: 'Preferencias',
+        description: 'Las cookies de preferencias permiten que un sitio web recuerde información que cambia la forma en que el sitio web se comporta o se ve, como tu idioma preferido o la región en la que te encuentras.',
+      },
+      marketing: {
+        title: 'Marketing',
+        description: 'Las cookies de marketing se utilizan para rastrear a los visitantes en los sitios web. La intención es mostrar anuncios que sean relevantes y atractivos para el usuario individual y, por lo tanto, más valiosos para los editores y anunciantes externos.',
+      },
+      unclassified: {
+        title: 'No clasificadas',
+        description: 'Las cookies no clasificadas son cookies que estamos en proceso de clasificar, junto con los proveedores de cookies individuales.',
+      },
+    },
+    privacyTrigger: {
+      cookieSettings: 'Configuración de cookies',
+      yourState: 'Tu estado actual',
+      consentDate: 'Fecha de consentimiento',
+      consentId: 'Tu ID de consentimiento',
+      changeConsent: 'Cambiar tu consentimiento',
+      withdrawConsent: 'Retirar tu consentimiento',
+    },
+  },
+  de: {
+    heading: 'Wir verwenden Cookies, um besser zu werden.',
+    body: 'Um die besten Erfahrungen zu bieten, verwenden wir Technologien wie Cookies, um Geräteinformationen zu speichern und/oder darauf zuzugreifen. Die Zustimmung zu diesen Technologien ermöglicht es uns, Daten wie das Surfverhalten oder eindeutige IDs auf dieser Website zu verarbeiten. Wenn Sie nicht zustimmen oder Ihre Zustimmung widerrufen, gilt dies als zugestimmt, kann jedoch bestimmte Funktionen und Features beeinträchtigen.',
+    cookiesPrivacy: 'Cookie-Datenschutz',
+    privacyPolicy: 'Datenschutzrichtlinie',
+    accept: 'Akzeptieren',
+    deny: 'Ablehnen',
+    customize: 'Anpassen',
+    saveCustomize: 'Einstellungen speichern',
+    showDetails: 'Details anzeigen',
+    hideDetails: 'Details ausblenden',
+    generalIntro: {
+      title: 'Allgemeine Cookie-Einführung',
+      p1: 'Cookies sind kleine Textdateien, die von Websites verwendet werden können, um die Erfahrung eines Benutzers effizienter zu gestalten.',
+      p2: 'Das Gesetz besagt, dass wir Cookies auf Ihrem Gerät speichern können, wenn diese für den Betrieb dieser Website unbedingt erforderlich sind. Für alle anderen Arten von Cookies benötigen wir Ihre Erlaubnis.',
+      p3: 'Diese Website verwendet verschiedene Arten von Cookies. Einige Cookies werden von Drittanbieterdiensten platziert, die auf unseren Seiten erscheinen.',
+      p4: 'Sie können Ihre Einwilligung jederzeit ändern oder widerrufen, indem Sie die Cookie-Erklärung auf unserer Website aufrufen.',
+      p5: 'Erfahren Sie mehr darüber, wer wir sind, wie Sie uns kontaktieren können und wie wir personenbezogene Daten in unserer Datenschutzrichtlinie verarbeiten.',
+      p6: 'Bitte geben Sie Ihre Einwilligungs-ID und das Datum an, wenn Sie uns bezüglich Ihrer Einwilligung kontaktieren.',
+    },
+    categories: {
+      necessary: {
+        title: 'Notwendig',
+        description: 'Notwendige Cookies helfen dabei, eine Website nutzbar zu machen, indem sie grundlegende Funktionen wie Seitennavigation und Zugang zu sicheren Bereichen der Website ermöglichen. Die Website kann ohne diese Cookies nicht ordnungsgemäß funktionieren.',
+        alwaysActive: 'Immer aktiv',
+      },
+      statistics: {
+        title: 'Statistiken',
+        description: 'Statistik-Cookies helfen Website-Betreibern zu verstehen, wie Besucher mit Websites interagieren, indem sie Informationen anonym sammeln und melden.',
+      },
+      preferences: {
+        title: 'Präferenzen',
+        description: 'Präferenz-Cookies ermöglichen es einer Website, Informationen zu merken, die das Verhalten oder das Aussehen der Website verändern, wie Ihre bevorzugte Sprache oder die Region, in der Sie sich befinden.',
+      },
+      marketing: {
+        title: 'Marketing',
+        description: 'Marketing-Cookies werden verwendet, um Besucher über Websites hinweg zu verfolgen. Die Absicht ist es, Anzeigen zu zeigen, die für den einzelnen Benutzer relevant und ansprechend sind und damit für Publisher und externe Werbetreibende wertvoller sind.',
+      },
+      unclassified: {
+        title: 'Nicht klassifiziert',
+        description: 'Nicht klassifizierte Cookies sind Cookies, die wir gerade zusammen mit den Anbietern einzelner Cookies klassifizieren.',
+      },
+    },
+    privacyTrigger: {
+      cookieSettings: 'Cookie-Einstellungen',
+      yourState: 'Ihr aktueller Status',
+      consentDate: 'Einwilligungsdatum',
+      consentId: 'Ihre Einwilligungs-ID',
+      changeConsent: 'Ihre Einwilligung ändern',
+      withdrawConsent: 'Ihre Einwilligung widerrufen',
+    },
+  },
+};

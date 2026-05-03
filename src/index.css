@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes rotate-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer utilities {
+  .animate-orbit {
+    animation: rotate-orbit 20s linear infinite;
+  }
+  .page-refresh-trigger {
+    display: none;
+  }
+}

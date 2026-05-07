@@ -1,6 +1,433 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase, DocsPage, DocsSatellite, DocsStatus } from '../../lib/supabase';
-import { Plus, CreditCard as Edit2, Trash2, Eye, EyeOff, ChevronDown, ChevronRight, GripVertical, X, Save, ArrowLeft } from 'lucide-react';
+import {
+  Plus, CreditCard as Edit2, Trash2, Eye, EyeOff, ChevronDown, ChevronRight,
+  Save, ArrowLeft, Bold, Italic, Underline, Link2, List, ListOrdered,
+  Image as ImageIcon, Video, AlignLeft, Minus, Code, Quote, Type
+} from 'lucide-react';
+
+// ─── Rich Text Editor ─────────────────────────────────────────────────────────
+
+function DocsRichEditor({ value, onChange }: { value: string; onChange: (html: string) => void }) {
+  const editorRef = useRef<HTMLDivElement>(null);
+  const isInternalUpdate = useRef(false);
+  const [showLinkDialog, setShowLinkDialog] = useState(false);
+  const [showImageDialog, setShowImageDialog] = useState(false);
+  const [showVideoDialog, setShowVideoDialog] = useState(false);
+  const [linkUrl, setLinkUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageCaption, setImageCaption] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoCaption, setVideoCaption] = useState('');
+  const savedRange = useRef<Range | null>(null);
+
+  useEffect(() => {
+    const el = editorRef.current;
+    if (!el || isInternalUpdate.current) return;
+    if (el.innerHTML !== value) {
+      el.innerHTML = value || '';
+    }
+  }, [value]);
+
+  const handleInput = useCallback(() => {
+    const el = editorRef.current;
+    if (!el) return;
+    isInternalUpdate.current = true;
+    onChange(el.innerHTML);
+    setTimeout(() => { isInternalUpdate.current = false; }, 0);
+  }, [onChange]);
+
+  const exec = (cmd: string, val?: string) => {
+    editorRef.current?.focus();
+    document.execCommand(cmd, false, val);
+    handleInput();
+  };
+
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedRange.current = sel.getRangeAt(0).cloneRange();
+    }
+  };
+
+  const restoreSelection = () => {
+    const sel = window.getSelection();
+    if (sel && savedRange.current) {
+      sel.removeAllRanges();
+      sel.addRange(savedRange.current);
+    }
+  };
+
+  const isActive = (cmd: string) => {
+    try { return document.queryCommandState(cmd); } catch { return false; }
+  };
+
+  const insertHtml = (html: string) => {
+    editorRef.current?.focus();
+    restoreSelection();
+    document.execCommand('insertHTML', false, html);
+    handleInput();
+  };
+
+  // Convert YouTube/Vimeo URLs to embed
+  const toEmbedUrl = (url: string): string => {
+    const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+    if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+    const vm = url.match(/vimeo\.com\/(\d+)/);
+    if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+    return url;
+  };
+
+  const handleInsertLink = () => {
+    if (!linkUrl.trim()) return;
+    editorRef.current?.focus();
+    restoreSelection();
+    document.execCommand('createLink', false, linkUrl.trim());
+    // Make links open in new tab
+    editorRef.current?.querySelectorAll('a').forEach((a) => {
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+    });
+    handleInput();
+    setLinkUrl('');
+    setShowLinkDialog(false);
+  };
+
+  const handleInsertImage = () => {
+    if (!imageUrl.trim()) return;
+    const caption = imageCaption.trim();
+    const html = `<figure class="docs-figure my-6">
+  <img src="${imageUrl.trim()}" alt="${caption}" class="w-full rounded-lg border border-gray-200 object-cover" />
+  ${caption ? `<figcaption class="text-sm text-gray-500 text-center mt-2 font-jost italic">${caption}</figcaption>` : ''}
+</figure><p><br/></p>`;
+    insertHtml(html);
+    setImageUrl('');
+    setImageCaption('');
+    setShowImageDialog(false);
+  };
+
+  const handleInsertVideo = () => {
+    if (!videoUrl.trim()) return;
+    const embed = toEmbedUrl(videoUrl.trim());
+    const caption = videoCaption.trim();
+    const html = `<figure class="docs-figure my-6">
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:0.5rem;border:1px solid #e5e7eb">
+    <iframe src="${embed}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen loading="lazy"></iframe>
+  </div>
+  ${caption ? `<figcaption class="text-sm text-gray-500 text-center mt-2 font-jost italic">${caption}</figcaption>` : ''}
+</figure><p><br/></p>`;
+    insertHtml(html);
+    setVideoUrl('');
+    setVideoCaption('');
+    setShowVideoDialog(false);
+  };
+
+  const handleInsertDivider = () => {
+    insertHtml('<hr style="border:none;border-top:1px solid #e5e7eb;margin:2rem 0" /><p><br/></p>');
+  };
+
+  const handleInsertCode = () => {
+    const sel = window.getSelection();
+    const selected = sel && sel.rangeCount > 0 ? sel.getRangeAt(0).toString() : '';
+    if (selected) {
+      exec('insertHTML', `<code style="background:#f3f4f6;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:0.85em;color:#065f46">${selected}</code>`);
+    } else {
+      insertHtml('<pre style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:1rem;overflow-x:auto;font-family:monospace;font-size:0.85em;line-height:1.6"><code>code here</code></pre><p><br/></p>');
+    }
+  };
+
+  const handleInsertCallout = (type: 'info' | 'warning' | 'tip') => {
+    const styles: Record<string, { bg: string; border: string; text: string; icon: string; label: string }> = {
+      info:    { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af', icon: 'ℹ️', label: 'Info' },
+      warning: { bg: '#fffbeb', border: '#f59e0b', text: '#92400e', icon: '⚠️', label: 'Warning' },
+      tip:     { bg: '#f0fdf4', border: '#22c55e', text: '#166534', icon: '💡', label: 'Tip' },
+    };
+    const s = styles[type];
+    const html = `<div style="background:${s.bg};border-left:4px solid ${s.border};padding:12px 16px;border-radius:0 8px 8px 0;margin:1.5rem 0">
+  <p style="font-weight:700;color:${s.text};margin-bottom:4px;font-size:0.85em;text-transform:uppercase;letter-spacing:0.05em">${s.icon} ${s.label}</p>
+  <p style="color:${s.text};margin:0">Write your ${s.label.toLowerCase()} here.</p>
+</div><p><br/></p>`;
+    insertHtml(html);
+  };
+
+  const ToolBtn = ({
+    cmd, icon, title, val, active
+  }: { cmd?: string; icon: React.ReactNode; title: string; val?: string; active?: boolean }) => (
+    <button
+      type="button"
+      onMouseDown={(e) => {
+        e.preventDefault();
+        if (cmd) exec(cmd, val);
+      }}
+      title={title}
+      className={`p-1.5 rounded transition-colors ${
+        active ?? (cmd ? isActive(cmd) : false)
+          ? 'bg-asciende-purple text-white'
+          : 'text-gray-600 hover:bg-gray-200 hover:text-gray-900'
+      }`}
+    >
+      {icon}
+    </button>
+  );
+
+  const Sep = () => <div className="w-px h-5 bg-gray-300 mx-0.5 self-center" />;
+
+  return (
+    <div className="border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-asciende-purple focus-within:border-transparent transition">
+      {/* Toolbar */}
+      <div className="flex items-center gap-0.5 px-2 py-2 bg-gray-50 border-b border-gray-200 flex-wrap">
+        {/* Text formatting */}
+        <ToolBtn cmd="bold" icon={<Bold size={14} />} title="Bold (Ctrl+B)" />
+        <ToolBtn cmd="italic" icon={<Italic size={14} />} title="Italic (Ctrl+I)" />
+        <ToolBtn cmd="underline" icon={<Underline size={14} />} title="Underline (Ctrl+U)" />
+        <Sep />
+
+        {/* Headings */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('formatBlock', 'h1'); }}
+          title="Heading 1"
+          className="px-2 py-1 rounded text-xs font-krona font-bold text-gray-600 hover:bg-gray-200 transition"
+        >H1</button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('formatBlock', 'h2'); }}
+          title="Heading 2"
+          className="px-2 py-1 rounded text-xs font-krona font-bold text-gray-600 hover:bg-gray-200 transition"
+        >H2</button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('formatBlock', 'h3'); }}
+          title="Heading 3"
+          className="px-2 py-1 rounded text-xs font-krona font-bold text-gray-600 hover:bg-gray-200 transition"
+        >H3</button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('formatBlock', 'p'); }}
+          title="Paragraph"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><AlignLeft size={14} /></button>
+        <Sep />
+
+        {/* Font size */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('fontSize', '5'); }}
+          title="Large text"
+          className="px-2 py-1 rounded text-sm font-bold text-gray-700 hover:bg-gray-200 transition leading-none"
+        >A<span className="text-[9px] align-super">+</span></button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('fontSize', '3'); }}
+          title="Normal text"
+          className="px-2 py-1 rounded text-xs font-bold text-gray-600 hover:bg-gray-200 transition leading-none"
+        >A</button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('fontSize', '1'); }}
+          title="Small text"
+          className="px-2 py-1 rounded text-[10px] font-bold text-gray-500 hover:bg-gray-200 transition leading-none"
+        >A<span className="text-[9px] align-sub">-</span></button>
+        <Sep />
+
+        {/* Lists */}
+        <ToolBtn cmd="insertUnorderedList" icon={<List size={14} />} title="Bullet list" />
+        <ToolBtn cmd="insertOrderedList" icon={<ListOrdered size={14} />} title="Numbered list" />
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); exec('formatBlock', 'blockquote'); }}
+          title="Blockquote"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><Quote size={14} /></button>
+        <Sep />
+
+        {/* Code */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); handleInsertCode(); }}
+          title="Inline code / code block"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><Code size={14} /></button>
+        <Sep />
+
+        {/* Link */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); saveSelection(); setShowLinkDialog(true); }}
+          title="Insert link"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><Link2 size={14} /></button>
+        <Sep />
+
+        {/* Media */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); saveSelection(); setShowImageDialog(true); }}
+          title="Insert image"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><ImageIcon size={14} /></button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); saveSelection(); setShowVideoDialog(true); }}
+          title="Insert video"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><Video size={14} /></button>
+        <Sep />
+
+        {/* Callouts */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); handleInsertCallout('info'); }}
+          title="Info callout"
+          className="px-2 py-1 rounded text-[10px] font-bold text-blue-600 hover:bg-blue-50 transition"
+        >INFO</button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); handleInsertCallout('warning'); }}
+          title="Warning callout"
+          className="px-2 py-1 rounded text-[10px] font-bold text-yellow-600 hover:bg-yellow-50 transition"
+        >WARN</button>
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); handleInsertCallout('tip'); }}
+          title="Tip callout"
+          className="px-2 py-1 rounded text-[10px] font-bold text-green-600 hover:bg-green-50 transition"
+        >TIP</button>
+        <Sep />
+
+        {/* Divider */}
+        <button
+          type="button"
+          onMouseDown={(e) => { e.preventDefault(); handleInsertDivider(); }}
+          title="Insert horizontal rule"
+          className="p-1.5 rounded text-gray-600 hover:bg-gray-200 transition"
+        ><Minus size={14} /></button>
+      </div>
+
+      {/* Editable area */}
+      <div
+        ref={editorRef}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={handleInput}
+        className={`min-h-[420px] px-6 py-5 text-sm font-jost text-gray-800 outline-none leading-relaxed overflow-y-auto
+          [&_h1]:font-krona [&_h1]:font-bold [&_h1]:text-2xl [&_h1]:text-gray-900 [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:leading-tight
+          [&_h2]:font-krona [&_h2]:font-bold [&_h2]:text-xl [&_h2]:text-gray-900 [&_h2]:mt-6 [&_h2]:mb-3
+          [&_h3]:font-krona [&_h3]:font-bold [&_h3]:text-lg [&_h3]:text-gray-800 [&_h3]:mt-5 [&_h3]:mb-2
+          [&_p]:mb-3 [&_p]:leading-relaxed
+          [&_strong]:font-semibold [&_b]:font-semibold
+          [&_em]:italic [&_i]:italic
+          [&_u]:underline
+          [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-3 [&_ul]:space-y-1
+          [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-3 [&_ol]:space-y-1
+          [&_li]:font-jost
+          [&_blockquote]:border-l-4 [&_blockquote]:border-asciende-purple/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-4
+          [&_code]:font-mono [&_code]:text-emerald-700 [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[0.85em]
+          [&_pre]:bg-gray-50 [&_pre]:border [&_pre]:border-gray-200 [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-4 [&_pre]:font-mono [&_pre]:text-sm
+          [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-gray-200 [&_hr]:my-8
+          [&_a]:text-asciende-purple [&_a]:underline [&_a]:font-medium [&_a]:cursor-pointer
+          [&_img]:rounded-lg [&_img]:max-w-full [&_img]:h-auto [&_img]:border [&_img]:border-gray-200
+          [&_figure]:my-6
+          [&_figcaption]:text-sm [&_figcaption]:text-gray-500 [&_figcaption]:text-center [&_figcaption]:mt-2 [&_figcaption]:italic
+          [&_iframe]:rounded-lg`}
+        style={{ whiteSpace: 'pre-wrap' }}
+        data-placeholder="Start writing your documentation content here..."
+      />
+
+      {/* Link dialog */}
+      {showLinkDialog && (
+        <Dialog title="Insert Link" onClose={() => setShowLinkDialog(false)}>
+          <input
+            type="url"
+            value={linkUrl}
+            onChange={(e) => setLinkUrl(e.target.value)}
+            placeholder="https://example.com"
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg font-jost text-sm focus:outline-none focus:border-asciende-purple"
+            autoFocus
+            onKeyDown={(e) => { if (e.key === 'Enter') handleInsertLink(); }}
+          />
+          <DialogActions onConfirm={handleInsertLink} onCancel={() => setShowLinkDialog(false)} confirmLabel="Insert" />
+        </Dialog>
+      )}
+
+      {/* Image dialog */}
+      {showImageDialog && (
+        <Dialog title="Insert Image" onClose={() => setShowImageDialog(false)}>
+          <input
+            type="url"
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="Image URL (https://...)"
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg font-jost text-sm focus:outline-none focus:border-asciende-purple mb-3"
+            autoFocus
+          />
+          <input
+            type="text"
+            value={imageCaption}
+            onChange={(e) => setImageCaption(e.target.value)}
+            placeholder="Caption (optional)"
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg font-jost text-sm focus:outline-none focus:border-asciende-purple"
+          />
+          {imageUrl && (
+            <img src={imageUrl} alt="preview" className="mt-3 max-h-36 rounded-lg object-cover border border-gray-200 w-full" />
+          )}
+          <DialogActions onConfirm={handleInsertImage} onCancel={() => setShowImageDialog(false)} confirmLabel="Insert Image" />
+        </Dialog>
+      )}
+
+      {/* Video dialog */}
+      {showVideoDialog && (
+        <Dialog title="Insert Video" onClose={() => setShowVideoDialog(false)}>
+          <p className="text-xs text-gray-500 font-jost mb-2">Supports YouTube, Vimeo, or any embed URL.</p>
+          <input
+            type="url"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="https://youtube.com/watch?v=..."
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg font-jost text-sm focus:outline-none focus:border-asciende-purple mb-3"
+            autoFocus
+          />
+          <input
+            type="text"
+            value={videoCaption}
+            onChange={(e) => setVideoCaption(e.target.value)}
+            placeholder="Caption (optional)"
+            className="w-full px-3 py-2 border border-gray-200 rounded-lg font-jost text-sm focus:outline-none focus:border-asciende-purple"
+          />
+          <DialogActions onConfirm={handleInsertVideo} onCancel={() => setShowVideoDialog(false)} confirmLabel="Insert Video" />
+        </Dialog>
+      )}
+    </div>
+  );
+}
+
+function Dialog({ title, children, onClose }: { title: string; children: React.ReactNode; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+        <h3 className="font-krona font-bold text-gray-900 mb-4">{title}</h3>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function DialogActions({ onConfirm, onCancel, confirmLabel }: { onConfirm: () => void; onCancel: () => void; confirmLabel: string }) {
+  return (
+    <div className="flex gap-2 mt-4">
+      <button
+        onClick={onConfirm}
+        className="flex-1 px-4 py-2 bg-asciende-purple text-white rounded-lg font-jost text-sm font-semibold hover:bg-asciende-purple/90 transition"
+      >{confirmLabel}</button>
+      <button
+        onClick={onCancel}
+        className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-jost text-sm hover:bg-gray-200 transition"
+      >Cancel</button>
+    </div>
+  );
+}
+
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const SATELLITES: { value: DocsSatellite; label: string }[] = [
   { value: 'general', label: 'General' },
@@ -31,6 +458,8 @@ function estimateReadingTime(html: string): number {
   return Math.max(1, Math.round(words / 200));
 }
 
+// ─── Docs Editor ──────────────────────────────────────────────────────────────
+
 interface DocsEditorProps {
   page: DocsPage | null;
   allPages: DocsPage[];
@@ -46,8 +475,8 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
   const [satellite, setSatellite] = useState<DocsSatellite>(page?.satellite || 'general');
   const [category, setCategory] = useState(page?.category || '');
   const [excerpt, setExcerpt] = useState(page?.excerpt || '');
-  const [contentMarkdown, setContentMarkdown] = useState(page?.content_markdown || '');
   const [contentHtml, setContentHtml] = useState(page?.content_html || '');
+  const [contentMarkdown, setContentMarkdown] = useState(page?.content_markdown || '');
   const [seoTitle, setSeoTitle] = useState(page?.seo_title || '');
   const [seoDescription, setSeoDescription] = useState(page?.seo_description || '');
   const [coverImage, setCoverImage] = useState(page?.cover_image || '');
@@ -124,16 +553,16 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
           <p className="text-xs font-krona text-gray-400">Docs Editor</p>
           <p className="text-sm font-krona font-bold text-gray-900 truncate">{title || 'New Page'}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <label className="flex items-center gap-2 cursor-pointer">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <span className="text-sm font-jost text-gray-600">{published ? 'Published' : 'Draft'}</span>
             <div
               onClick={() => setPublished(!published)}
-              className={`w-10 h-5 rounded-full relative transition-colors ${published ? 'bg-green-500' : 'bg-gray-300'}`}
+              className={`w-10 h-5 rounded-full relative transition-colors cursor-pointer ${published ? 'bg-green-500' : 'bg-gray-300'}`}
             >
               <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-all ${published ? 'left-5' : 'left-0.5'}`} />
             </div>
-          </label>
+          </div>
           <button
             onClick={handleSave}
             disabled={saving}
@@ -203,23 +632,20 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
             </div>
 
             <div>
-              <label className={labelClass}>Content (HTML)</label>
-              <textarea
-                value={contentHtml}
-                onChange={(e) => setContentHtml(e.target.value)}
-                rows={18}
-                placeholder="<h1>Title</h1><p>Content...</p>"
-                className={`${inputClass} font-mono text-xs leading-relaxed`}
-              />
+              <label className={labelClass}>Content</label>
+              <DocsRichEditor value={contentHtml} onChange={setContentHtml} />
             </div>
 
             <div>
-              <label className={labelClass}>Content (Markdown — for search & AI)</label>
+              <label className={labelClass}>
+                Markdown Source
+                <span className="font-jost font-normal text-gray-400 ml-2">(optional — for search & AI indexing)</span>
+              </label>
               <textarea
                 value={contentMarkdown}
                 onChange={(e) => setContentMarkdown(e.target.value)}
-                rows={8}
-                placeholder="# Title&#10;&#10;Content in markdown..."
+                rows={6}
+                placeholder="# Title&#10;&#10;Content in markdown format..."
                 className={`${inputClass} font-mono text-xs leading-relaxed`}
               />
             </div>
@@ -286,7 +712,7 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
             </div>
 
             <div>
-              <label className={labelClass}>Tags (comma-separated)</label>
+              <label className={labelClass}>Tags <span className="font-normal text-gray-400 ml-1">(comma-separated)</span></label>
               <input
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
@@ -296,7 +722,7 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
             </div>
 
             <div>
-              <label className={labelClass}>Related Docs Slugs (comma-separated)</label>
+              <label className={labelClass}>Related Docs <span className="font-normal text-gray-400 ml-1">(slugs, comma-separated)</span></label>
               <input
                 value={relatedSlugs}
                 onChange={(e) => setRelatedSlugs(e.target.value)}
@@ -343,7 +769,7 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
               />
               <p className="text-xs text-gray-400 mt-1 font-jost">{seoDescription.length}/160 chars recommended</p>
             </div>
-            <div className={`p-4 rounded-xl bg-gray-50 border border-gray-200`}>
+            <div className="p-4 rounded-xl bg-gray-50 border border-gray-200">
               <p className="text-xs font-krona font-bold text-gray-500 mb-3">Search Preview</p>
               <p className="text-blue-700 text-base font-medium truncate">{seoTitle || title || 'Page Title'}</p>
               <p className="text-green-700 text-xs">asciende.pro/docs/{slug}</p>
@@ -355,6 +781,8 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
     </div>
   );
 }
+
+// ─── Docs Manager (list view) ─────────────────────────────────────────────────
 
 export function DocsManager() {
   const [pages, setPages] = useState<DocsPage[]>([]);
@@ -461,7 +889,9 @@ export function DocsManager() {
                     onClick={() => setCollapsed((prev) => { const n = new Set(prev); n.has(p.id) ? n.delete(p.id) : n.add(p.id); return n; })}
                     className="p-0.5 text-gray-400"
                   >
-                    {children.length > 0 ? (isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />) : <span className="w-4 h-4 block" />}
+                    {children.length > 0
+                      ? (isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />)
+                      : <span className="w-4 h-4 block" />}
                   </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">

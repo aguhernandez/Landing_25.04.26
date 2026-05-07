@@ -19,6 +19,8 @@ import PerformanceTesting from './components/PerformanceTesting';
 import { AsciendeProAthletes } from './components/AsciendeProAthletes';
 import { ComingSoon } from './components/ComingSoon';
 import { CookieBanner } from './components/CookieBanner';
+import { DocsLayout } from './components/docs';
+import { DocsManager } from './components/admin/DocsManager';
 import { supabase } from './lib/supabase';
 
 type Language = 'en' | 'es';
@@ -625,7 +627,7 @@ const translations = {
   },
 };
 
-type Page = 'home' | 'services' | 'training-programs' | 'coaching-1v1' | 'academy' | 'resources' | 'platform' | 'hub' | 'physiology-lab' | 'cycling-planner' | 'running-planner' | 'race-planner' | 'beach-volley' | 'for-brands' | 'about' | 'strength-planning' | 'nutrition-planning' | 'endurance-planning' | 'performance-testing' | 'privacy-policy' | 'support' | 'impressum' | 'terms' | 'cookies' | 'refund-policy' | 'delete-account' | 'coming-soon';
+type Page = 'home' | 'services' | 'training-programs' | 'coaching-1v1' | 'academy' | 'resources' | 'platform' | 'hub' | 'physiology-lab' | 'cycling-planner' | 'running-planner' | 'race-planner' | 'beach-volley' | 'for-brands' | 'about' | 'strength-planning' | 'nutrition-planning' | 'endurance-planning' | 'performance-testing' | 'privacy-policy' | 'support' | 'impressum' | 'terms' | 'cookies' | 'refund-policy' | 'delete-account' | 'coming-soon' | 'docs';
 
 const pageToPath: Record<Page, string> = {
   home: '/',
@@ -655,6 +657,7 @@ const pageToPath: Record<Page, string> = {
   'refund-policy': '/refund-policy',
   'delete-account': '/delete-account',
   'coming-soon': '/coming-soon',
+  docs: '/docs',
 };
 
 const pathToPage: Record<string, Page> = Object.entries(pageToPath).reduce(
@@ -670,7 +673,13 @@ export default function App() {
   const [language, setLanguage] = useState<Language>('en');
   const [currentPage, setCurrentPageState] = useState<Page>(() => {
     const pathname = window.location.pathname;
+    if (pathname === '/docs' || pathname.startsWith('/docs/')) return 'docs';
     return pathToPage[pathname] || 'home';
+  });
+  const [docsSlug, setDocsSlug] = useState<string>(() => {
+    const pathname = window.location.pathname;
+    if (pathname.startsWith('/docs/')) return pathname.replace('/docs/', '');
+    return '';
   });
   const [storyPostId, setStoryPostId] = useState<string | null>(null);
   const [showStoriesPage, setShowStoriesPage] = useState(() => window.location.pathname === '/stories/');
@@ -823,6 +832,15 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white font-jost">
         <BlogStoryPage postId={storyPostId} language={language} onClose={closeStory} />
+      </div>
+    );
+  }
+
+  // Docs is a full-screen experience with its own navigation
+  if (currentPage === 'docs') {
+    return (
+      <div className="font-jost">
+        <DocsLayout initialSlug={docsSlug || undefined} />
       </div>
     );
   }

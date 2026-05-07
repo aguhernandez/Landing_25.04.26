@@ -6,6 +6,7 @@ import { BlogPostEditor } from './admin/BlogPostEditor';
 import { CategoryManager } from './admin/CategoryManager';
 import { MediaManager } from './admin/MediaManager';
 import { AuthorProfile } from './admin/AuthorProfile';
+import { DocsManager } from './admin/DocsManager';
 import { BlogTeaserModal } from './blog/BlogTeaserModal';
 
 export function Blog({ t, language, onOpenStory, onViewAll }: { t: any; language: 'en' | 'es'; onOpenStory: (postId: string, catSlug: string, postSlug: string) => void; onViewAll: () => void }) {
@@ -395,7 +396,7 @@ export function AdminLogin({ onLoginSuccess, t }) {
 
 // ─── Admin Dashboard ──────────────────────────────────────────────────────────
 
-type AdminSection = 'posts' | 'categories' | 'media' | 'author' | 'cookie-analytics';
+type AdminSection = 'posts' | 'categories' | 'media' | 'author' | 'cookie-analytics' | 'docs';
 
 export function AdminDashboard({ user, onLogout, t }) {
   const [activeSection, setActiveSection] = useState<AdminSection>('posts');
@@ -438,6 +439,7 @@ export function AdminDashboard({ user, onLogout, t }) {
     { id: 'media', label: 'Media', icon: <ImageIcon size={18} /> },
     { id: 'author', label: 'Autores', icon: <UserCircle size={18} /> },
     { id: 'cookie-analytics', label: 'Cookie Analytics', icon: <BarChart2 size={18} /> },
+    { id: 'docs', label: 'Docs', icon: <FileText size={18} /> },
   ];
 
   return (
@@ -588,6 +590,7 @@ export function AdminDashboard({ user, onLogout, t }) {
           {activeSection === 'media' && <MediaManager />}
           {activeSection === 'author' && <AuthorProfile />}
           {activeSection === 'cookie-analytics' && <CookieAnalytics />}
+          {activeSection === 'docs' && <DocsManager />}
         </main>
       </div>
     </div>

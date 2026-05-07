@@ -59,3 +59,31 @@ export type BlogAuthor = {
   created_at: string;
   updated_at: string;
 };
+
+export type DocsSatellite = 'general' | 'hub' | 'lab' | 'endurance-planner' | 'nutrition-planner' | 'academy' | 'performance-vector' | 'motion';
+export type DocsStatus = 'alpha' | 'beta' | 'experimental' | 'stable';
+
+export type DocsPage = {
+  id: string;
+  title: string;
+  slug: string;
+  parent_slug?: string;
+  satellite: DocsSatellite;
+  category?: string;
+  content_markdown?: string;
+  content_html?: string;
+  content_json?: Record<string, unknown>;
+  excerpt?: string;
+  seo_title?: string;
+  seo_description?: string;
+  cover_image?: string;
+  order_index: number;
+  tags: string[];
+  related_slugs: string[];
+  published: boolean;
+  version_label?: string;
+  status: DocsStatus;
+  estimated_reading_minutes?: number;
+  created_at: string;
+  updated_at: string;
+};

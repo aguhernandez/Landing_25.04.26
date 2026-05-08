@@ -52,10 +52,6 @@ export function DocsArticle({ page, prevPage, nextPage, onNavigate, satelliteMet
     year: 'numeric', month: 'long', day: 'numeric',
   });
 
-  const prose = darkMode
-    ? 'prose-invert prose-headings:text-gray-100 prose-p:text-gray-300 prose-li:text-gray-300 prose-strong:text-gray-100 prose-a:text-blue-400 prose-code:text-emerald-400 prose-pre:bg-gray-900'
-    : 'prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-a:text-asciende-purple prose-code:text-emerald-700 prose-pre:bg-gray-50';
-
   const border = darkMode ? 'border-gray-800' : 'border-gray-200';
   const muted = darkMode ? 'text-gray-500' : 'text-gray-400';
   const cardBg = darkMode ? 'bg-gray-900 border-gray-800' : 'bg-gray-50 border-gray-200';
@@ -137,19 +133,7 @@ export function DocsArticle({ page, prevPage, nextPage, onNavigate, satelliteMet
         {/* Content */}
         <div
           ref={articleRef}
-          className={`prose prose-lg max-w-none font-jost
-            prose-headings:font-krona
-            prose-h1:text-2xl prose-h1:mt-10 prose-h1:mb-4
-            prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-3
-            prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-2
-            prose-p:leading-relaxed prose-p:mb-4
-            prose-ul:my-4 prose-li:my-1
-            prose-code:text-sm prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono
-            prose-pre:rounded-xl prose-pre:p-4 prose-pre:overflow-x-auto
-            prose-blockquote:border-l-4 prose-blockquote:border-asciende-purple/40 prose-blockquote:pl-4
-            prose-table:w-full prose-th:text-left prose-th:font-krona
-            ${prose}
-          `}
+          className={`docs-content${darkMode ? ' dark' : ''}`}
           dangerouslySetInnerHTML={{ __html: page.content_html || '<p>No content yet.</p>' }}
         />
 

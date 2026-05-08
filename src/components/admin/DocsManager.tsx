@@ -304,32 +304,13 @@ function DocsRichEditor({ value, onChange }: { value: string; onChange: (html: s
         ><Minus size={14} /></button>
       </div>
 
-      {/* Editable area */}
+      {/* Editable area — uses the same docs-content CSS as the frontend for true WYSIWYG */}
       <div
         ref={editorRef}
         contentEditable
         suppressContentEditableWarning
         onInput={handleInput}
-        className={`min-h-[420px] px-6 py-5 text-sm font-jost text-gray-800 outline-none leading-relaxed overflow-y-auto
-          [&_h1]:font-krona [&_h1]:font-bold [&_h1]:text-2xl [&_h1]:text-gray-900 [&_h1]:mt-8 [&_h1]:mb-4 [&_h1]:leading-tight
-          [&_h2]:font-krona [&_h2]:font-bold [&_h2]:text-xl [&_h2]:text-gray-900 [&_h2]:mt-6 [&_h2]:mb-3
-          [&_h3]:font-krona [&_h3]:font-bold [&_h3]:text-lg [&_h3]:text-gray-800 [&_h3]:mt-5 [&_h3]:mb-2
-          [&_p]:mb-3 [&_p]:leading-relaxed
-          [&_strong]:font-semibold [&_b]:font-semibold
-          [&_em]:italic [&_i]:italic
-          [&_u]:underline
-          [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-3 [&_ul]:space-y-1
-          [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-3 [&_ol]:space-y-1
-          [&_li]:font-jost
-          [&_blockquote]:border-l-4 [&_blockquote]:border-asciende-purple/30 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-4
-          [&_code]:font-mono [&_code]:text-emerald-700 [&_code]:bg-gray-100 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[0.85em]
-          [&_pre]:bg-gray-50 [&_pre]:border [&_pre]:border-gray-200 [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:overflow-x-auto [&_pre]:my-4 [&_pre]:font-mono [&_pre]:text-sm
-          [&_hr]:border-0 [&_hr]:border-t [&_hr]:border-gray-200 [&_hr]:my-8
-          [&_a]:text-asciende-purple [&_a]:underline [&_a]:font-medium [&_a]:cursor-pointer
-          [&_img]:rounded-lg [&_img]:max-w-full [&_img]:h-auto [&_img]:border [&_img]:border-gray-200
-          [&_figure]:my-6
-          [&_figcaption]:text-sm [&_figcaption]:text-gray-500 [&_figcaption]:text-center [&_figcaption]:mt-2 [&_figcaption]:italic
-          [&_iframe]:rounded-lg`}
+        className="docs-content docs-editor-body px-6 py-5 outline-none"
         style={{ whiteSpace: 'pre-wrap' }}
         data-placeholder="Start writing your documentation content here..."
       />

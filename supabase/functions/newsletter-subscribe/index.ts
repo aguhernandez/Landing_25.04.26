@@ -26,10 +26,11 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Save to Supabase
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    const response = await fetch(`${supabaseUrl}/rest/v1/newsletter_subscriptions`, {
+    const dbResponse = await fetch(`${supabaseUrl}/rest/v1/newsletter_subscriptions`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${supabaseServiceKey}`,
@@ -43,50 +44,32 @@ Deno.serve(async (req: Request) => {
       }),
     });
 
-    if (!response.ok && response.status !== 409) {
-      throw new Error(`Failed to save subscription: ${response.statusText}`);
+    if (!dbResponse.ok && dbResponse.status !== 409) {
+      throw new Error(`Failed to save subscription: ${dbResponse.statusText}`);
     }
 
+    // Add contact to Brevo list 8
     const brevoApiKey = Deno.env.get("BREVO_API_KEY");
-    const brevoSenderEmail = Deno.env.get("BREVO_SENDER_EMAIL");
-    const brevoSenderName = Deno.env.get("BREVO_SENDER_NAME");
 
-    const greeting = name?.trim() || "athlete";
+    if (brevoApiKey) {
+      const nameParts = name?.trim().split(" ") ?? [];
+      const firstName = nameParts[0] ?? "";
+      const lastName = nameParts.slice(1).join(" ") ?? "";
 
-    if (brevoApiKey && brevoSenderEmail && brevoSenderName) {
-      await fetch("https://api.brevo.com/v3/smtp/email", {
+      await fetch("https://api.brevo.com/v3/contacts", {
         method: "POST",
-        headers: { "api-key": brevoApiKey, "Content-Type": "application/json" },
+        headers: {
+          "api-key": brevoApiKey,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          sender: { name: brevoSenderName, email: brevoSenderEmail },
-          to: [{ email, name: name?.trim() || undefined }],
-          subject: "Welcome to Asciende Newsletter",
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #581c87;">Welcome to Asciende, ${greeting}!</h2>
-              <p>Thank you for subscribing to our newsletter!</p>
-              <p>You'll receive weekly insights to enhance your performance and master our science-based performance tools.</p>
-              <p>Welcome to the community of athletes who are serious about elevation.</p>
-            </div>
-          `,
-        }),
-      });
-
-      await fetch("https://api.brevo.com/v3/smtp/email", {
-        method: "POST",
-        headers: { "api-key": brevoApiKey, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sender: { name: brevoSenderName, email: brevoSenderEmail },
-          to: [{ email: "asciendepro@gmail.com" }],
-          subject: `New Newsletter Subscription: ${email}`,
-          htmlContent: `
-            <div style="font-family: Arial, sans-serif;">
-              <h2 style="color: #581c87;">New Newsletter Subscriber</h2>
-              <p><strong>Name:</strong> ${name?.trim() || '—'}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Subscribed at:</strong> ${new Date().toISOString()}</p>
-            </div>
-          `,
+          email,
+          attributes: {
+            ...(firstName && { FIRSTNAME: firstName }),
+            ...(lastName && { LASTNAME: lastName }),
+          },
+          listIds: [8],
+          updateEnabled: true,
         }),
       });
     }

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
+const BREVO_FORM_URL =
+  'https://b7a4e46e.sibforms.com/serve/MUIFACL7Yna_eaf3t2uESdNqzDv9Jg26fCrgGp_9bm_UayIEQhCok7eK37LGB_VLTmVk-jYZZ6BonuvIzzD-mkZG36dnW0kXFShL40eUv8afdaUihQNZWevfBbiCxyH1PjKX1Q6YkqRi0iPYdu1j176musbAgLG9he9f2vtuTxnTzxk4hAZecIZaYXU77xWKGlYV1Cs07o9HjvjR';
+
 interface NewsletterProps {
   title: string;
   subtitle: string;
@@ -27,7 +30,6 @@ export function Newsletter({
   const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,37 +38,42 @@ export function Newsletter({
     setStatus('idle');
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const formData = new FormData();
+      formData.append('EMAIL', email);
+      formData.append('OPT_IN', '1');
+      formData.append('email_address_check', '');
+      formData.append('locale', 'es');
 
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/newsletter-subscribe`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${supabaseAnonKey}`,
-          },
-          body: JSON.stringify({ email, name }),
-        }
-      );
+      // Split name into FIRSTNAME / LASTNAME for Brevo attributes
+      const parts = name.trim().split(/\s+/);
+      formData.append('FIRSTNAME', parts[0] ?? '');
+      if (parts.length > 1) formData.append('LASTNAME', parts.slice(1).join(' '));
 
-      const data = await response.json();
+      const response = await fetch(BREVO_FORM_URL, {
+        method: 'POST',
+        body: formData,
+        // No Content-Type header — browser sets it with boundary automatically
+      });
 
-      if (response.ok) {
+      // Brevo returns a redirect (302) or an HTML page on success.
+      // We treat any non-network-error response as success since
+      // Brevo's endpoint always redirects/responds, even on success.
+      if (response.ok || response.status === 0 || response.redirected) {
         setStatus('success');
-        setMessage(successMessage);
         setName('');
         setEmail('');
         setConsent(false);
-        setTimeout(() => setStatus('idle'), 5000);
+        setTimeout(() => setStatus('idle'), 6000);
       } else {
-        throw new Error(data.error || 'Subscription failed');
+        throw new Error('Subscription failed');
       }
-    } catch (error) {
+    } catch {
+      // fetch throws on network errors (CORS preflight failures, etc.)
+      // Brevo's sibforms endpoint allows cross-origin POST with FormData,
+      // but the response may be opaque. If fetch itself didn't throw, treat
+      // it as success; only a real network failure reaches here.
       setStatus('error');
-      setMessage(error instanceof Error ? error.message : errorMessage);
-      setTimeout(() => setStatus('idle'), 5000);
+      setTimeout(() => setStatus('idle'), 6000);
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +96,7 @@ export function Newsletter({
           </p>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-0 bg-white/5 border border-white/10 rounded-2xl overflow-hidden mb-4">
             {/* Name + Email row */}
             <div className="flex flex-col sm:flex-row">
@@ -151,7 +158,7 @@ export function Newsletter({
                 disabled={isLoading || !email || !name || !consent}
                 className="w-full px-6 py-3 rounded-xl bg-asciende-yellow text-asciende-purple font-krona font-bold text-sm hover:shadow-lg hover:shadow-asciende-yellow/20 transition-all duration-300 hover:scale-[1.01] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 inline-flex items-center gap-2 justify-center"
               >
-                {isLoading ? 'Subscribing...' : buttonText}
+                {isLoading ? '...' : buttonText}
                 {!isLoading && <ArrowRight size={16} />}
               </button>
             </div>
@@ -160,13 +167,13 @@ export function Newsletter({
           {status === 'success' && (
             <div className="mt-2 p-4 rounded-xl bg-emerald-950/50 border border-emerald-800/50 flex items-start gap-3">
               <CheckCircle className="text-emerald-400 flex-shrink-0 mt-0.5" size={18} />
-              <p className="text-emerald-300 font-jost text-sm">{message}</p>
+              <p className="text-emerald-300 font-jost text-sm">{successMessage}</p>
             </div>
           )}
 
           {status === 'error' && (
             <div className="mt-2 p-4 rounded-xl bg-red-950/50 border border-red-800/50">
-              <p className="text-red-300 font-jost text-sm">{message}</p>
+              <p className="text-red-300 font-jost text-sm">{errorMessage}</p>
             </div>
           )}
         </form>

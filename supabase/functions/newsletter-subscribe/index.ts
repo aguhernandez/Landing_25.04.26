@@ -6,6 +6,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
+const BREVO_FORM_URL =
+  "https://b7a4e46e.sibforms.com/serve/MUIFACL7Yna_eaf3t2uESdNqzDv9Jg26fCrgGp_9bm_UayIEQhCok7eK37LGB_VLTmVk-jYZZ6BonuvIzzD-mkZG36dnW0kXFShL40eUv8afdaUihQNZWevfBbiCxyH1PjKX1Q6YkqRi0iPYdu1j176musbAgLG9he9f2vtuTxnTzxk4hAZecIZaYXU77xWKGlYV1Cs07o9HjvjR";
+
 interface SubscribeRequest {
   email: string;
   name?: string;
@@ -26,62 +29,32 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // Save to Supabase
-    const supabaseUrl = Deno.env.get("SUPABASE_URL");
-    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const parts = (name ?? "").trim().split(/\s+/);
+    const firstName = parts[0] ?? "";
+    const lastName = parts.slice(1).join(" ");
 
-    const dbResponse = await fetch(`${supabaseUrl}/rest/v1/newsletter_subscriptions`, {
+    const formData = new FormData();
+    formData.append("EMAIL", email);
+    formData.append("OPT_IN", "1");
+    formData.append("email_address_check", "");
+    formData.append("locale", "es");
+    if (firstName) formData.append("FIRSTNAME", firstName);
+    if (lastName) formData.append("LASTNAME", lastName);
+
+    // Proxy the request to Brevo from the server — no CORS issues
+    await fetch(BREVO_FORM_URL, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${supabaseServiceKey}`,
-        "Content-Type": "application/json",
-        Prefer: "return=minimal",
-      },
-      body: JSON.stringify({
-        email,
-        name: name?.trim() || null,
-        is_active: true,
-      }),
+      body: formData,
     });
 
-    if (!dbResponse.ok && dbResponse.status !== 409) {
-      throw new Error(`Failed to save subscription: ${dbResponse.statusText}`);
-    }
-
-    // Add contact to Brevo list 8
-    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
-
-    if (brevoApiKey) {
-      const nameParts = name?.trim().split(" ") ?? [];
-      const firstName = nameParts[0] ?? "";
-      const lastName = nameParts.slice(1).join(" ") ?? "";
-
-      await fetch("https://api.brevo.com/v3/contacts", {
-        method: "POST",
-        headers: {
-          "api-key": brevoApiKey,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          attributes: {
-            ...(firstName && { FIRSTNAME: firstName }),
-            ...(lastName && { LASTNAME: lastName }),
-          },
-          listIds: [8],
-          updateEnabled: true,
-        }),
-      });
-    }
-
     return new Response(
-      JSON.stringify({ success: true, message: "Successfully subscribed to newsletter" }),
+      JSON.stringify({ success: true }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
     console.error("Error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "An error occurred" }),
+      JSON.stringify({ error: "An error occurred" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }

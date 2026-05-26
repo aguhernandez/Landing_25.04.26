@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
-const BREVO_FORM_URL =
-  'https://b7a4e46e.sibforms.com/serve/MUIFACL7Yna_eaf3t2uESdNqzDv9Jg26fCrgGp_9bm_UayIEQhCok7eK37LGB_VLTmVk-jYZZ6BonuvIzzD-mkZG36dnW0kXFShL40eUv8afdaUihQNZWevfBbiCxyH1PjKX1Q6YkqRi0iPYdu1j176musbAgLG9he9f2vtuTxnTzxk4hAZecIZaYXU77xWKGlYV1Cs07o9HjvjR';
-
 interface NewsletterProps {
   title: string;
   subtitle: string;
@@ -38,27 +35,19 @@ export function Newsletter({
     setStatus('idle');
 
     try {
-      const formData = new FormData();
-      formData.append('EMAIL', email);
-      formData.append('OPT_IN', '1');
-      formData.append('email_address_check', '');
-      formData.append('locale', 'es');
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-      // Split name into FIRSTNAME / LASTNAME for Brevo attributes
-      const parts = name.trim().split(/\s+/);
-      formData.append('FIRSTNAME', parts[0] ?? '');
-      if (parts.length > 1) formData.append('LASTNAME', parts.slice(1).join(' '));
-
-      const response = await fetch(BREVO_FORM_URL, {
+      const response = await fetch(`${supabaseUrl}/functions/v1/newsletter-subscribe`, {
         method: 'POST',
-        body: formData,
-        // No Content-Type header — browser sets it with boundary automatically
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        },
+        body: JSON.stringify({ email, name }),
       });
 
-      // Brevo returns a redirect (302) or an HTML page on success.
-      // We treat any non-network-error response as success since
-      // Brevo's endpoint always redirects/responds, even on success.
-      if (response.ok || response.status === 0 || response.redirected) {
+      if (response.ok) {
         setStatus('success');
         setName('');
         setEmail('');
@@ -68,10 +57,6 @@ export function Newsletter({
         throw new Error('Subscription failed');
       }
     } catch {
-      // fetch throws on network errors (CORS preflight failures, etc.)
-      // Brevo's sibforms endpoint allows cross-origin POST with FormData,
-      // but the response may be opaque. If fetch itself didn't throw, treat
-      // it as success; only a real network failure reaches here.
       setStatus('error');
       setTimeout(() => setStatus('idle'), 6000);
     } finally {

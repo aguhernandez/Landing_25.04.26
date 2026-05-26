@@ -5,18 +5,22 @@ interface NewsletterProps {
   title: string;
   subtitle: string;
   placeholder: string;
+  namePlaceholder: string;
   buttonText: string;
   successMessage: string;
   errorMessage: string;
+  consentLabel: string;
 }
 
 export function Newsletter({
   title,
   subtitle,
   placeholder,
+  namePlaceholder,
   buttonText,
   successMessage,
   errorMessage,
+  consentLabel,
 }: NewsletterProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -93,7 +97,7 @@ export function Newsletter({
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                placeholder={namePlaceholder}
                 required
                 disabled={isLoading}
                 className="flex-1 px-5 py-4 bg-transparent text-white placeholder-gray-500 focus:outline-none font-jost text-base disabled:cursor-not-allowed border-b sm:border-b-0 sm:border-r border-white/10"
@@ -135,7 +139,7 @@ export function Newsletter({
                   </div>
                 </div>
                 <span className="font-jost text-sm text-gray-400 leading-snug group-hover:text-gray-300 transition-colors">
-                  Quiero suscribirme al newsletter de <span className="text-white font-semibold">Asciende</span> y recibir contenido sobre rendimiento deportivo, nutricion y herramientas de entrenamiento.
+                  {consentLabel}
                 </span>
               </label>
             </div>

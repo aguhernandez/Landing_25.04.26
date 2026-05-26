@@ -242,9 +242,11 @@ const translations = {
       title: 'Subscribe and ride on a wheel.',
       subtitle: 'Receive weekly insights to enhance your performance and master Asciende\'s science-based performance tools.',
       placeholder: 'Enter your email',
+      namePlaceholder: 'Your name',
       buttonText: 'Subscribe',
       successMessage: 'Welcome to the Asciende community! Check your email for confirmation.',
       errorMessage: 'Something went wrong. Please try again.',
+      consentLabel: 'I want to subscribe to the Asciende newsletter and receive content about sports performance, nutrition, and training tools.',
     },
     footer: {
       about: 'Connecting athletes, knowledge, and opportunities globally.',
@@ -538,9 +540,11 @@ const translations = {
       title: 'Suscríbete y rueda sobre una rueda.',
       subtitle: 'Recibe información semanal para mejorar tu rendimiento y domina las herramientas de rendimiento basadas en ciencia de Asciende.',
       placeholder: 'Ingresa tu email',
+      namePlaceholder: 'Tu nombre',
       buttonText: 'Suscribirse',
       successMessage: '¡Bienvenido a la comunidad de Asciende! Revisa tu email para confirmar.',
       errorMessage: 'Algo salió mal. Por favor intenta de nuevo.',
+      consentLabel: 'Quiero suscribirme al newsletter de Asciende y recibir contenido sobre rendimiento deportivo, nutrición y herramientas de entrenamiento.',
     },
     footer: {
       about: 'Conectando atletas, conocimiento y oportunidades globalmente.',
@@ -864,9 +868,11 @@ export default function App() {
             title={t.newsletter.title}
             subtitle={t.newsletter.subtitle}
             placeholder={t.newsletter.placeholder}
+            namePlaceholder={t.newsletter.namePlaceholder}
             buttonText={t.newsletter.buttonText}
             successMessage={t.newsletter.successMessage}
             errorMessage={t.newsletter.errorMessage}
+            consentLabel={t.newsletter.consentLabel}
           />
         </>
       )}

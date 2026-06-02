@@ -123,6 +123,11 @@ export function PrivacyPolicy() {
                 <h2 className="text-2xl font-krona font-bold text-gray-900 mb-4">11. Änderungen dieser Datenschutzerklärung</h2>
                 <p>Diese Datenschutzerklärung kann bei Änderungen der gesetzlichen Anforderungen oder unserer Dienste aktualisiert werden. Wir empfehlen, diese Erklärung regelmäßig zu überprüfen.</p>
               </section>
+              <section>
+                <h2 className="text-2xl font-krona font-bold text-gray-900 mb-4">12. Nutzung von Standortdaten (Location Data)</h2>
+                <p className="mb-3">Unsere App Asciende Hub erhebt präzise und ungefähre Standortdaten, um das Tracking und Aufzeichnen von Trainingsrouten für Laufen, Radfahren und andere sportliche Aktivitäten der Athleten zu ermöglichen – auch wenn die App geschlossen ist oder nicht aktiv genutzt wird (im Hintergrund / Background).</p>
+                <p>Diese Daten werden ausschließlich zur Berechnung von Leistungsmetriken (Distanz, Tempo und Routenkarten) verwendet und um diese mit dem zugewiesenen Trainer innerhalb der Plattform zu teilen. Wir geben diese Daten nicht an Dritte weiter und nutzen sie nicht für Werbezwecke.</p>
+              </section>
             </div>
           </>
         )}
@@ -223,6 +228,11 @@ export function PrivacyPolicy() {
                 <h2 className="text-2xl font-krona font-bold text-gray-900 mb-4">11. Policy Updates</h2>
                 <p>This privacy policy may be updated to reflect changes in legal requirements or our services. We recommend reviewing it periodically.</p>
               </section>
+              <section>
+                <h2 className="text-2xl font-krona font-bold text-gray-900 mb-4">12. Use of Location Data</h2>
+                <p className="mb-3">Our application Asciende Hub collects precise and approximate location data to enable tracking and logging of running, cycling, and physical workout routes for athletes, even when the app is closed or not in use (in the background). This data is used solely to calculate performance metrics (distance, pace, and route maps) and to share them with the assigned coach within the platform.</p>
+                <p>We do not share this data with third parties or use it for advertising purposes.</p>
+              </section>
             </div>
           </>
         )}
@@ -321,6 +331,11 @@ export function PrivacyPolicy() {
               <section>
                 <h2 className="text-2xl font-krona font-bold text-gray-900 mb-4">11. Actualizaciones de Esta Política</h2>
                 <p>Esta política de privacidad puede actualizarse para reflejar cambios en los requisitos legales o en nuestros servicios. Le recomendamos revisarla periódicamente.</p>
+              </section>
+              <section>
+                <h2 className="text-2xl font-krona font-bold text-gray-900 mb-4">12. Uso de Datos de Ubicación (Location Data)</h2>
+                <p className="mb-3">Nuestra aplicación Asciende Hub recopila datos de ubicación precisos y aproximados para permitir el seguimiento y registro de las rutas de entrenamiento de running, ciclismo y actividades físicas de los atletas, incluso cuando la aplicación está cerrada o no está en uso (en segundo plano / background).</p>
+                <p>Estos datos se utilizan exclusivamente para calcular métricas de rendimiento (distancia, ritmo y mapas de ruta) y para compartirlos con el entrenador asignado dentro de la plataforma. No compartimos estos datos con terceros ni los utilizamos con fines publicitarios.</p>
               </section>
             </div>
           </>

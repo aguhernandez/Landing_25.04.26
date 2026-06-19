@@ -22,6 +22,7 @@ import { CookieBanner } from './components/CookieBanner';
 import { DocsLayout } from './components/docs';
 import { DocsManager } from './components/admin/DocsManager';
 import { supabase } from './lib/supabase';
+import { AppDownloadBadges } from './components/AppDownloadBadges';
 
 type Language = 'en' | 'es';
 
@@ -1273,6 +1274,9 @@ function Hero({ language, t }) {
               <a href="https://hub.asciende.pro" className="border-2 border-white text-white px-10 py-4 rounded-full font-krona font-bold text-lg hover:bg-white/10 transition inline-flex items-center justify-center">
                 {t.hero.login}
               </a>
+            </div>
+            <div className="mt-6">
+              <AppDownloadBadges size="sm" />
             </div>
           </div>
         </div>
@@ -2857,6 +2861,9 @@ function Footer({ t, currentPage, setCurrentPage }) {
             <p className="text-sm text-white/70 font-jost">
               {t.footer.about}
             </p>
+            <div className="mt-5">
+              <AppDownloadBadges size="lg" />
+            </div>
           </div>
 
           <div>

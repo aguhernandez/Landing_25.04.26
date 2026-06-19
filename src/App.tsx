@@ -2862,7 +2862,7 @@ function Footer({ t, currentPage, setCurrentPage }) {
               {t.footer.about}
             </p>
             <div className="mt-5">
-              <AppDownloadBadges size="lg" />
+              <AppDownloadBadges size="lg" direction="col" />
             </div>
           </div>
 

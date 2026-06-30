@@ -10,17 +10,17 @@ interface StoriesPageProps {
 
 const storiesT = {
   en: {
-    heroTitle: 'All Stories',
+    heroTitle: 'Asciende Insights',
     heroSubtitle: 'Insights, science, and experiences from the world of endurance sport.',
-    allCategories: 'All',
+    allCategories: 'All Insights',
     noStories: 'No stories published yet.',
     readMore: 'Read Story',
     back: 'Back',
   },
   es: {
-    heroTitle: 'Todas las Historias',
+    heroTitle: 'Asciende Insights',
     heroSubtitle: 'Conocimiento, ciencia y experiencias del mundo del deporte de resistencia.',
-    allCategories: 'Todas',
+    allCategories: 'Todos los Insights',
     noStories: 'No hay historias publicadas aún.',
     readMore: 'Leer',
     back: 'Volver',

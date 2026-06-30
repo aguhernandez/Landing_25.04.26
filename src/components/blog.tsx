@@ -106,7 +106,7 @@ export function Blog({ t, language, onOpenStory, onViewAll }: { t: any; language
                   : 'bg-white border-2 border-asciende-purple text-asciende-purple hover:bg-asciende-purple/10'
               }`}
             >
-              {language === 'es' ? 'Todas las historias' : 'All stories'}
+              {language === 'es' ? 'Todos los Insights' : 'All Insights'}
             </button>
             {categories.map(cat => (
               <button

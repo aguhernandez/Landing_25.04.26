@@ -286,7 +286,7 @@ const translations = {
       contact: 'info@asciende.pro',
     },
     blog: {
-      title: 'Asciende Stories',
+      title: 'Asciende Insights',
       subtitle: 'Real stories from real athletes pushing their limits',
       readMore: 'Read Story',
       noArticles: 'No articles yet',
@@ -584,7 +584,7 @@ const translations = {
       contact: 'info@asciende.pro',
     },
     blog: {
-      title: 'Historias Asciende',
+      title: 'Asciende Insights',
       subtitle: 'Historias reales de atletas reales empujando sus límites',
       readMore: 'Leer Historia',
       noArticles: 'Sin artículos aún',

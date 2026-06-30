@@ -287,7 +287,7 @@ const translations = {
     },
     blog: {
       title: 'Asciende Insights',
-      subtitle: 'Real stories from real athletes pushing their limits',
+      subtitle: 'Explore the science, stories, and tools behind human performance.',
       readMore: 'Read Story',
       noArticles: 'No articles yet',
       next: 'Next',
@@ -585,7 +585,7 @@ const translations = {
     },
     blog: {
       title: 'Asciende Insights',
-      subtitle: 'Historias reales de atletas reales empujando sus límites',
+      subtitle: 'Explore the science, stories, and tools behind human performance.',
       readMore: 'Leer Historia',
       noArticles: 'Sin artículos aún',
       next: 'Siguiente',

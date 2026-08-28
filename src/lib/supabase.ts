@@ -84,6 +84,7 @@ export type DocsPage = {
   version_label?: string;
   status: DocsStatus;
   estimated_reading_minutes?: number;
+  language: 'en' | 'es';
   created_at: string;
   updated_at: string;
 };

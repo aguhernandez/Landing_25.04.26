@@ -3,7 +3,7 @@ import { supabase, DocsPage, DocsSatellite } from '../../lib/supabase';
 import { DocsSidebar } from './DocsSidebar';
 import { DocsArticle } from './DocsArticle';
 import { DocsSearch } from './DocsSearch';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, Globe, ChevronDown } from 'lucide-react';
 
 const SATELLITE_META: Record<DocsSatellite, { label: string; color: string }> = {
   general: { label: 'General', color: 'bg-gray-100 text-gray-700' },
@@ -27,18 +27,33 @@ export function DocsLayout({ initialSlug }: DocsLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [language, setLanguage] = useState<'en' | 'es'>('en');
+  const [langOpen, setLangOpen] = useState(false);
   const mainRef = useRef<HTMLDivElement>(null);
+  const langRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchPages();
   }, []);
 
   useEffect(() => {
-    if (pages.length === 0) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredPages = pages.filter((p) => p.language === language);
+
+  useEffect(() => {
+    if (filteredPages.length === 0) return;
     const slug = initialSlug || 'getting-started';
-    const found = pages.find((p) => p.slug === slug);
-    setCurrentPage(found || pages[0] || null);
-  }, [pages, initialSlug]);
+    const found = filteredPages.find((p) => p.slug === slug);
+    setCurrentPage(found || filteredPages[0] || null);
+  }, [filteredPages, initialSlug]);
 
   async function fetchPages() {
     setLoading(true);
@@ -61,7 +76,7 @@ export function DocsLayout({ initialSlug }: DocsLayoutProps) {
     }
   }
 
-  const flatPages = pages;
+  const flatPages = filteredPages;
   const currentIndex = flatPages.findIndex((p) => p.id === currentPage?.id);
   const prevPage = currentIndex > 0 ? flatPages[currentIndex - 1] : null;
   const nextPage = currentIndex < flatPages.length - 1 ? flatPages[currentIndex + 1] : null;
@@ -98,6 +113,34 @@ export function DocsLayout({ initialSlug }: DocsLayoutProps) {
           <kbd className={`hidden sm:inline text-xs px-1.5 py-0.5 rounded ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>⌘K</kbd>
         </button>
 
+        <div ref={langRef} className="relative">
+          <button
+            onClick={() => setLangOpen((v) => !v)}
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-sm font-jost font-medium transition ${darkMode ? 'border-gray-700 text-gray-300 hover:border-gray-500' : 'border-gray-200 text-gray-600 hover:border-gray-400'}`}
+            title="Select language"
+          >
+            <Globe className="w-4 h-4" />
+            <span>{language.toUpperCase()}</span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${langOpen ? 'rotate-180' : ''}`} />
+          </button>
+          {langOpen && (
+            <div className={`absolute right-0 mt-2 w-36 rounded-lg shadow-lg border z-50 overflow-hidden ${darkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+              <button
+                onClick={() => { setLanguage('en'); setLangOpen(false); }}
+                className={`w-full text-left px-4 py-2 text-sm font-jost transition ${language === 'en' ? 'text-asciende-purple font-semibold' : darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'}`}
+              >
+                English
+              </button>
+              <button
+                onClick={() => { setLanguage('es'); setLangOpen(false); }}
+                className={`w-full text-left px-4 py-2 text-sm font-jost transition border-t ${darkMode ? 'border-gray-700' : 'border-gray-100'} ${language === 'es' ? 'text-asciende-purple font-semibold' : darkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-50'}`}
+              >
+                Español
+              </button>
+            </div>
+          )}
+        </div>
+
         <button
           onClick={() => setDarkMode(!darkMode)}
           className={`p-2 rounded-md text-sm transition ${darkMode ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
@@ -120,7 +163,7 @@ export function DocsLayout({ initialSlug }: DocsLayoutProps) {
                 </button>
               </div>
               <DocsSidebar
-                pages={pages}
+                pages={filteredPages}
                 currentSlug={currentPage?.slug}
                 onNavigate={navigate}
                 satelliteMeta={SATELLITE_META}
@@ -133,7 +176,7 @@ export function DocsLayout({ initialSlug }: DocsLayoutProps) {
         {/* Desktop sidebar */}
         <aside className={`hidden lg:block w-64 xl:w-72 flex-shrink-0 border-r overflow-y-auto ${darkMode ? 'border-gray-800 bg-gray-950' : 'border-gray-200 bg-gray-50'}`} style={{ height: 'calc(100vh - 3.5rem)', position: 'sticky', top: '3.5rem' }}>
           <DocsSidebar
-            pages={pages}
+            pages={filteredPages}
             currentSlug={currentPage?.slug}
             onNavigate={navigate}
             satelliteMeta={SATELLITE_META}
@@ -167,7 +210,7 @@ export function DocsLayout({ initialSlug }: DocsLayoutProps) {
       {/* Search modal */}
       {searchOpen && (
         <DocsSearch
-          pages={pages}
+          pages={filteredPages}
           onNavigate={(slug) => { navigate(slug); setSearchOpen(false); }}
           onClose={() => setSearchOpen(false)}
           darkMode={darkMode}

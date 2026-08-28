@@ -467,6 +467,7 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
   const [published, setPublished] = useState(page?.published || false);
   const [versionLabel, setVersionLabel] = useState(page?.version_label || '');
   const [status, setStatus] = useState<DocsStatus>(page?.status || 'alpha');
+  const [language, setLanguage] = useState<'en' | 'es'>(page?.language || 'en');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<'content' | 'meta' | 'seo'>('content');
@@ -505,6 +506,7 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
       published,
       version_label: versionLabel.trim() || null,
       status,
+      language,
       estimated_reading_minutes: reading,
       updated_at: new Date().toISOString(),
     };
@@ -598,6 +600,26 @@ function DocsEditor({ page, allPages, onSaved, onCancel }: DocsEditorProps) {
                   )}
                 </div>
                 <p className="text-xs text-gray-400 mt-1 font-jost">/docs/{slug}</p>
+              </div>
+            </div>
+
+            <div>
+              <label className={labelClass}>Language</label>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setLanguage('en')}
+                  className={`flex-1 py-2 rounded-lg font-jost font-semibold text-sm border-2 transition ${language === 'en' ? 'bg-asciende-purple text-white border-asciende-purple' : 'bg-white text-gray-600 border-gray-300 hover:border-asciende-purple/50'}`}
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage('es')}
+                  className={`flex-1 py-2 rounded-lg font-jost font-semibold text-sm border-2 transition ${language === 'es' ? 'bg-asciende-purple text-white border-asciende-purple' : 'bg-white text-gray-600 border-gray-300 hover:border-asciende-purple/50'}`}
+                >
+                  Español
+                </button>
               </div>
             </div>
 
@@ -877,6 +899,9 @@ export function DocsManager() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-krona font-bold text-sm text-gray-900 truncate">{p.title}</span>
+                      {p.language === 'es' && (
+                        <span className="text-[10px] font-krona px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">ES</span>
+                      )}
                       <span className={`text-[10px] font-krona px-1.5 py-0.5 rounded ${statusColors[p.status]}`}>{p.status}</span>
                       {p.version_label && <span className="text-[10px] font-jost px-1.5 py-0.5 rounded border border-gray-200 text-gray-400">{p.version_label}</span>}
                     </div>

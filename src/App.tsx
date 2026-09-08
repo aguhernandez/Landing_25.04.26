@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle, Menu, X, Star, Globe, Instagram, Music, Youtube, Facebook, ChevronDown } from 'lucide-react';
+import { ArrowRight, CheckCircle, Check, Menu, X, Star, Globe, Instagram, Music, Youtube, Facebook, ChevronDown } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { Blog, AdminLogin, AdminDashboard } from './components/blog';
 import { BlogStoryPage, StoriesPage } from './components/blog/index';
@@ -197,25 +197,59 @@ const translations = {
       title: 'Choose your membership',
       basic: 'Asciende Basic',
       basicPrice: 'Free',
-      basicDesc: 'Sign up and access every science-based tool we develop — completely free. Explore training and nutrition planners, habit trackers, and Performance Information.',
-      basicNote: 'No training and nutrition planned, no community or brand support.',
+      basicDesc: 'Sign up and access every science-based tool we develop — completely free. Explore the Hub, habit trackers, and Performance Information.',
+      basicNote: 'No planned training or nutrition, project support, or brand benefits.',
       basicCTA: 'Sign up in Asciende Hub',
-      intermediate: 'Asciende Intermediate',
-      intermediatePrice: '€9.99',
-      intermediatePeriod: '/month',
-      intermediateYear: '€99.99/year',
-      intermediateDesc: 'Science-based training, nutrition, and lifestyle guidance — driven by AI. Receive support from the community and enjoy brand perks.',
-      intermediateCTA: 'Join Now',
       pro: 'Asciende PRO',
       proPrice: '€49.99',
       proPeriod: '/month',
       proYear: '€499.99/year',
-      proDesc: 'Sport-specific plans designed and evaluated by a coach, with direct contact. Includes all Intermediate benefits plus coaching support. Limited to 50 athletes.',
+      proDesc: 'The complete Asciende experience for athletes who want tools, support, visibility, and AI-powered performance planning. Limited to 50 athletes.',
+      proBenefits: [
+        'Everything in Asciende Hub',
+        'Possibility of support for your project or yourself',
+        'A shareable website for your project',
+        'Community benefits, brand discounts, and promotions',
+        'Access to Endurance Planner and Nutrition Planner',
+        'AI-generated monthly plans based on your data and goals',
+        'AI gym-training generation inside the Hub',
+        'Discounts on Academy courses',
+        'Access to all Performance Pills',
+      ],
       proCTA: 'Become PRO',
       coachingTitle: 'Performance Coaching 1:1',
       coachingSubtitle: 'Nutrition, Training, Analysis',
       coachingCTA: 'Coaching 1:1',
       viewDifferences: 'View all differences',
+      comparisonTitle: 'Feature Comparison',
+      comparisonFeature: 'Feature',
+      comparisonBasic: 'Basic',
+      comparisonPro: 'PRO',
+      comparisonBasicForever: '/ forever',
+      comparisonProMonth: '/ month',
+      comparisonLimited: 'Limited — 50 athletes',
+      catTraining: 'Training Planning',
+      catNutrition: 'Nutrition System',
+      catCommunity: 'Community & Support',
+      fTrainingPlanning: 'Training Planning',
+      fWeeklyLoad: 'Weekly Load Adjustment',
+      fAthleteStats: 'Athlete Statistics',
+      fExerciseLibrary: 'Exercise Library',
+      fPlanningTools: 'Planning Tools',
+      fAIGym: 'AI Gym Training Generation',
+      fBodyComp: 'Body Composition & Habits',
+      fMealPlanner: 'Meal Planner',
+      fNutritionGuides: 'Nutrition Guides & Courses',
+      fNutritionPlanner: 'Nutrition Planner Access',
+      fProjectSupport: 'Sports Project Support',
+      fProjectWebsite: 'Project Website Generation',
+      fBrandCommunity: 'Brand Community & Discounts',
+      fAcademyDiscounts: 'Academy Course Discounts',
+      fPerformancePills: 'All Performance Pills',
+      valAIPersonalized: 'Personalized AI',
+      valAutomatic: 'Automatic',
+      valCanOnlySupport: 'Can only support',
+      valFullAccess: 'Full Access',
     },
     testimonials: {
       title: 'Asciende PRO Athletes',
@@ -495,25 +529,59 @@ const translations = {
       title: 'Elige tu membresía',
       basic: 'Asciende Basic',
       basicPrice: 'Gratis',
-      basicDesc: 'Regístrate y accede a todas las herramientas científicas que desarrollamos - completamente gratis. Explora planificadores de entrenamiento y nutrición, rastreadores de hábitos e Información de Rendimiento.',
-      basicNote: 'Sin entrenamiento y nutrición planificados, sin apoyo comunitario o de marca.',
+      basicDesc: 'Regístrate y accede gratis a todas las herramientas científicas que desarrollamos. Explora el Hub, los rastreadores de hábitos y la Información de Rendimiento.',
+      basicNote: 'Sin entrenamiento ni nutrición planificados, apoyo para proyectos ni beneficios de marcas.',
       basicCTA: 'Regístrate en el Hub de Asciende',
-      intermediate: 'Asciende Intermedio',
-      intermediatePrice: '€9.99',
-      intermediatePeriod: '/mes',
-      intermediateYear: '€99.99/año',
-      intermediateDesc: 'Orientación científica en entrenamiento, nutrición y estilo de vida - impulsada por IA. Recibe apoyo de la comunidad y disfruta de beneficios de marca.',
-      intermediateCTA: 'Únete Ahora',
       pro: 'Asciende PRO',
       proPrice: '€49.99',
       proPeriod: '/mes',
       proYear: '€499.99/año',
-      proDesc: 'Planes específicos del deporte diseñados y evaluados por un entrenador, con contacto directo. Incluye todos los beneficios de Intermedio más apoyo de coaching. Limitado a 50 atletas.',
+      proDesc: 'La experiencia completa de Asciende para atletas que buscan herramientas, apoyo, visibilidad y planificación de rendimiento con IA. Limitado a 50 atletas.',
+      proBenefits: [
+        'Todo lo incluido en Asciende Hub',
+        'Posibilidad de apoyo para tu proyecto o para ti',
+        'Generación de una página web para compartir tu proyecto',
+        'Beneficios de comunidad, descuentos en marcas y promociones',
+        'Acceso a Endurance Planner y Nutrition Planner',
+        'Generación de planes mensuales con IA según tus datos y objetivos',
+        'Generación de entrenamientos de gimnasio con IA dentro del Hub',
+        'Descuentos en cursos de Academy',
+        'Acceso a todos los Performance Pills',
+      ],
       proCTA: 'Hazte PRO',
       coachingTitle: 'Performance Coaching 1:1',
       coachingSubtitle: 'Nutrición, Entrenamiento, Análisis',
       coachingCTA: 'Coaching 1:1',
       viewDifferences: 'Ver todas las diferencias',
+      comparisonTitle: 'Comparación de beneficios',
+      comparisonFeature: 'Beneficio',
+      comparisonBasic: 'Basic',
+      comparisonPro: 'PRO',
+      comparisonBasicForever: '/ para siempre',
+      comparisonProMonth: '/ mes',
+      comparisonLimited: 'Limitado — 50 atletas',
+      catTraining: 'Planificación de Entrenamiento',
+      catNutrition: 'Sistema de Nutrición',
+      catCommunity: 'Comunidad y Apoyo',
+      fTrainingPlanning: 'Planificación de Entrenamiento',
+      fWeeklyLoad: 'Ajuste de Carga Semanal',
+      fAthleteStats: 'Estadísticas del Atleta',
+      fExerciseLibrary: 'Biblioteca de Ejercicios',
+      fPlanningTools: 'Herramientas de Planificación',
+      fAIGym: 'Generación de Entrenamiento de Gimnasio con IA',
+      fBodyComp: 'Composición Corporal y Hábitos',
+      fMealPlanner: 'Planificador de Comidas',
+      fNutritionGuides: 'Guías y Cursos de Nutrición',
+      fNutritionPlanner: 'Acceso al Nutrition Planner',
+      fProjectSupport: 'Apoyo para Proyectos Deportivos',
+      fProjectWebsite: 'Generación de Página Web del Proyecto',
+      fBrandCommunity: 'Comunidad de Marcas y Descuentos',
+      fAcademyDiscounts: 'Descuentos en Cursos de Academy',
+      fPerformancePills: 'Todos los Performance Pills',
+      valAIPersonalized: 'IA Personalizada',
+      valAutomatic: 'Automático',
+      valCanOnlySupport: 'Solo puede apoyar',
+      valFullAccess: 'Acceso Completo',
     },
     testimonials: {
       title: 'Atletas PRO de Asciende',
@@ -1801,31 +1869,36 @@ function StatCard({ icon, label, desc }) {
 }
 
 function ComparisonModal({ t, onClose }) {
+  const m = t.memberships;
   const comparisonData = [
     {
-      category: 'Training Planning',
+      category: m.catTraining,
       features: [
-        { name: 'Training Planning', basic: '?', intermediate: 'Static Plans', pro: 'Personalized AI', proPro: 'Coach + AI' },
-        { name: 'Weekly Load Adjustment', basic: '✕', intermediate: 'Automatic', pro: 'Automatic', proPro: 'Supervised' },
-        { name: 'Athlete Statistics', basic: '✓', intermediate: '✓', pro: '✓', proPro: '✓' },
-        { name: 'Exercise Library', basic: '✓', intermediate: '✓', pro: '✓', proPro: '✓' },
-        { name: 'Planning Tools', basic: '✓', intermediate: '✓', pro: '✓', proPro: '✓' },
+        { name: m.fTrainingPlanning, basic: '?', pro: m.valAIPersonalized },
+        { name: m.fWeeklyLoad, basic: '✕', pro: m.valAutomatic },
+        { name: m.fAthleteStats, basic: '✓', pro: '✓' },
+        { name: m.fExerciseLibrary, basic: '✓', pro: '✓' },
+        { name: m.fPlanningTools, basic: '✓', pro: '✓' },
+        { name: m.fAIGym, basic: '✕', pro: '✓' },
       ]
     },
     {
-      category: 'Nutrition System',
+      category: m.catNutrition,
       features: [
-        { name: 'Body Composition & Habits', basic: '✓', intermediate: '✓', pro: '✓', proPro: '✓' },
-        { name: 'Meal Planner', basic: '✓', intermediate: '✓', pro: '✓', proPro: 'Coach Review' },
-        { name: 'Nutrition Guides & Courses', basic: '✕', intermediate: '✓', pro: '✓', proPro: '✓' },
+        { name: m.fBodyComp, basic: '✓', pro: '✓' },
+        { name: m.fMealPlanner, basic: '✓', pro: '✓' },
+        { name: m.fNutritionGuides, basic: '✕', pro: '✓' },
+        { name: m.fNutritionPlanner, basic: '✕', pro: '✓' },
       ]
     },
     {
-      category: 'Community & Support',
+      category: m.catCommunity,
       features: [
-        { name: 'Sports Project Support', basic: 'Can only support', intermediate: 'Full Access', pro: 'Full Access', proPro: 'Full Access' },
-        { name: 'Brand Community', basic: '✕', intermediate: '✓', pro: '✓', proPro: '✓' },
-        { name: 'Individual Feedback (Coach)', basic: '✕', intermediate: '✕', pro: '✕', proPro: 'Weekly' },
+        { name: m.fProjectSupport, basic: m.valCanOnlySupport, pro: m.valFullAccess },
+        { name: m.fProjectWebsite, basic: '✕', pro: '✓' },
+        { name: m.fBrandCommunity, basic: '✕', pro: '✓' },
+        { name: m.fAcademyDiscounts, basic: '✕', pro: '✓' },
+        { name: m.fPerformancePills, basic: '✕', pro: '✓' },
       ]
     }
   ];
@@ -1836,11 +1909,11 @@ function ComparisonModal({ t, onClose }) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl w-[95vw] shadow-2xl animate-slideUp flex flex-col max-h-[90vh]"
+        className="bg-white rounded-3xl w-[95vw] max-w-3xl shadow-2xl animate-slideUp flex flex-col max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-8 border-b border-gray-100 bg-gradient-to-r from-asciende-purple/5 to-asciende-yellow/5 rounded-t-3xl flex-shrink-0">
-          <h2 className="text-4xl font-krona font-bold text-asciende-purple">Feature Comparison</h2>
+          <h2 className="text-4xl font-krona font-bold text-asciende-purple">{m.comparisonTitle}</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-asciende-purple text-3xl transition duration-300 font-light hover:scale-110"
@@ -1853,17 +1926,16 @@ function ComparisonModal({ t, onClose }) {
           <table className="w-full">
             <thead className="sticky top-0 bg-white">
               <tr className="border-b-3 border-asciende-purple">
-                <th className="text-left py-6 px-2 font-krona font-bold text-asciende-purple text-lg">Feature</th>
-                <th className="text-center py-6 px-2 font-krona font-bold text-asciende-purple text-lg">Basic</th>
-                <th className="text-center py-6 px-2 font-krona font-bold text-asciende-purple text-lg">Intermediate</th>
-                <th className="text-center py-6 px-2 font-krona font-bold text-asciende-purple text-lg">PRO</th>
+                <th className="text-left py-6 px-2 font-krona font-bold text-asciende-purple text-lg">{m.comparisonFeature}</th>
+                <th className="text-center py-6 px-2 font-krona font-bold text-asciende-purple text-lg">{m.comparisonBasic}</th>
+                <th className="text-center py-6 px-2 font-krona font-bold text-asciende-purple text-lg">{m.comparisonPro}</th>
               </tr>
             </thead>
             <tbody>
               {comparisonData.map((section, secIdx) => (
                 <tbody key={secIdx}>
                   <tr className="bg-gradient-to-r from-asciende-purple/8 to-transparent">
-                    <td colSpan="4" className="py-4 px-2 font-krona font-bold text-asciende-purple text-sm uppercase tracking-widest">
+                    <td colSpan="3" className="py-4 px-2 font-krona font-bold text-asciende-purple text-sm uppercase tracking-widest">
                       {section.category}
                     </td>
                   </tr>
@@ -1876,12 +1948,7 @@ function ComparisonModal({ t, onClose }) {
                         </span>
                       </td>
                       <td className="py-5 px-2 text-center">
-                        <span className={`font-jost font-semibold text-lg ${feature.intermediate === '✓' ? 'text-green-500' : feature.intermediate === '✕' ? 'text-gray-300' : 'text-gray-700'}`}>
-                          {feature.intermediate}
-                        </span>
-                      </td>
-                      <td className="py-5 px-2 text-center">
-                        <span className={`font-jost font-semibold text-lg ${feature.pro === '✓' ? 'text-green-500' : feature.pro === '✕' ? 'text-gray-300' : feature.pro === 'Coach Review' ? 'text-asciende-yellow' : 'text-gray-700'}`}>
+                        <span className={`font-jost font-semibold text-lg ${feature.pro === '✓' ? 'text-green-500' : feature.pro === '✕' ? 'text-gray-300' : 'text-asciende-purple'}`}>
                           {feature.pro}
                         </span>
                       </td>
@@ -1894,19 +1961,15 @@ function ComparisonModal({ t, onClose }) {
         </div>
 
         <div className="border-t border-gray-100 p-8 bg-gradient-to-b from-gray-50/50 to-white rounded-b-3xl flex-shrink-0">
-          <div className="grid grid-cols-3 gap-6 w-full">
+          <div className="grid grid-cols-2 gap-6 w-full max-w-md mx-auto">
             <div className="p-6 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100/50 text-center border border-gray-200/50 hover:shadow-lg transition duration-300">
               <p className="font-krona font-bold text-3xl text-asciende-purple mb-2">€0</p>
-              <p className="text-sm text-gray-600 font-jost font-medium">/ forever</p>
-            </div>
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-asciende-yellow/10 to-asciende-yellow/5 text-center border border-asciende-yellow/30 hover:shadow-lg transition duration-300">
-              <p className="font-krona font-bold text-3xl text-asciende-purple mb-2">€9.99</p>
-              <p className="text-sm text-gray-600 font-jost font-medium">/ month</p>
+              <p className="text-sm text-gray-600 font-jost font-medium">{m.comparisonBasicForever}</p>
             </div>
             <div className="p-6 rounded-2xl bg-gradient-to-br from-asciende-purple/10 to-asciende-purple/5 text-center border border-asciende-purple/30 hover:shadow-lg transition duration-300">
               <p className="font-krona font-bold text-3xl text-asciende-purple mb-2">€49.99</p>
-              <p className="text-sm text-gray-600 font-jost font-medium mb-1">/ month</p>
-              <p className="text-xs text-asciende-yellow font-krona font-bold">Lim. 50 athletes</p>
+              <p className="text-sm text-gray-600 font-jost font-medium mb-1">{m.comparisonProMonth}</p>
+              <p className="text-xs text-asciende-yellow font-krona font-bold">{m.comparisonLimited}</p>
             </div>
           </div>
         </div>
@@ -1958,7 +2021,7 @@ function Memberships({ t }) {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8 items-stretch">
+        <div className="grid md:grid-cols-2 gap-6 mb-8 items-stretch max-w-4xl mx-auto">
           <MembershipCard
             title={t.memberships.basic}
             price={t.memberships.basicPrice}
@@ -1970,24 +2033,15 @@ function Memberships({ t }) {
             badge={null}
           />
           <MembershipCard
-            title={t.memberships.intermediate}
-            price={t.memberships.intermediatePrice}
-            period={t.memberships.intermediatePeriod}
-            alternativePrice={t.memberships.intermediateYear}
-            description={t.memberships.intermediateDesc}
-            cta={t.memberships.intermediateCTA}
-            highlighted={false}
-            badge="Most Popular"
-          />
-          <MembershipCard
             title={t.memberships.pro}
             price={t.memberships.proPrice}
             period={t.memberships.proPeriod}
             alternativePrice={t.memberships.proYear}
             description={t.memberships.proDesc}
+            benefits={t.memberships.proBenefits}
             cta={t.memberships.proCTA}
             highlighted={true}
-            badge="Limited — 50 athletes"
+            badge={t.memberships.comparisonLimited}
           />
         </div>
 
@@ -2050,7 +2104,7 @@ function Memberships({ t }) {
   );
 }
 
-function MembershipCard({ title, price, period, alternativePrice, description, note, cta, highlighted, badge }) {
+function MembershipCard({ title, price, period, alternativePrice, description, note, benefits, cta, highlighted, badge }) {
   return (
     <div className={`relative rounded-3xl flex flex-col h-full transition-all duration-300 ${
       highlighted
@@ -2072,7 +2126,7 @@ function MembershipCard({ title, price, period, alternativePrice, description, n
           {title}
         </h3>
 
-        <div className="my-6 pb-6 border-b ${highlighted ? 'border-white/10' : 'border-gray-100'}">
+        <div className={`my-6 pb-6 border-b ${highlighted ? 'border-white/10' : 'border-gray-100'}`}>
           <div className="flex items-end gap-1">
             <span className={`text-5xl font-krona font-bold leading-none ${highlighted ? 'text-white' : 'text-asciende-purple'}`}>
               {price}
@@ -2090,9 +2144,22 @@ function MembershipCard({ title, price, period, alternativePrice, description, n
           )}
         </div>
 
-        <p className={`font-jost text-sm leading-relaxed flex-1 mb-6 ${highlighted ? 'text-white/85' : 'text-gray-600'}`}>
+        <p className={`font-jost text-sm leading-relaxed mb-4 ${highlighted ? 'text-white/85' : 'text-gray-600'}`}>
           {description}
         </p>
+
+        {benefits && benefits.length > 0 && (
+          <ul className="space-y-2.5 mb-6 flex-1">
+            {benefits.map((benefit, idx) => (
+              <li key={idx} className={`flex items-start gap-2.5 text-sm font-jost leading-relaxed ${highlighted ? 'text-white/90' : 'text-gray-700'}`}>
+                <span className={`flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5 ${highlighted ? 'bg-asciende-yellow text-asciende-purple' : 'bg-asciende-purple/10 text-asciende-purple'}`}>
+                  <Check className="w-3 h-3" strokeWidth={3} />
+                </span>
+                <span>{benefit}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {note && (
           <p className={`text-xs mb-6 italic border rounded-xl px-3 py-2 ${

@@ -201,9 +201,9 @@ const translations = {
       basicNote: 'No planned training or nutrition, project support, or brand benefits.',
       basicCTA: 'Sign up in Asciende Hub',
       pro: 'Asciende PRO',
-      proPrice: '€49.99',
+      proPrice: '€14.99',
       proPeriod: '/month',
-      proYear: '€499.99/year',
+      proYear: '€149.99/year',
       proDesc: 'The complete Asciende experience for athletes who want tools, support, visibility, and AI-powered performance planning. Limited to 50 athletes.',
       proBenefits: [
         'Everything in Asciende Hub',
@@ -533,9 +533,9 @@ const translations = {
       basicNote: 'Sin entrenamiento ni nutrición planificados, apoyo para proyectos ni beneficios de marcas.',
       basicCTA: 'Regístrate en el Hub de Asciende',
       pro: 'Asciende PRO',
-      proPrice: '€49.99',
+      proPrice: '€14.99',
       proPeriod: '/mes',
-      proYear: '€499.99/año',
+      proYear: '€149.99/año',
       proDesc: 'La experiencia completa de Asciende para atletas que buscan herramientas, apoyo, visibilidad y planificación de rendimiento con IA. Limitado a 50 atletas.',
       proBenefits: [
         'Todo lo incluido en Asciende Hub',
@@ -1923,7 +1923,12 @@ function ComparisonModal({ t, onClose }) {
         </div>
 
         <div className="overflow-y-auto p-8 flex-grow">
-          <table className="w-full">
+          <table className="w-full table-fixed">
+            <colgroup>
+              <col className="w-[55%]" />
+              <col className="w-[22.5%]" />
+              <col className="w-[22.5%]" />
+            </colgroup>
             <thead className="sticky top-0 bg-white">
               <tr className="border-b-3 border-asciende-purple">
                 <th className="text-left py-6 px-2 font-krona font-bold text-asciende-purple text-lg">{m.comparisonFeature}</th>
@@ -1932,30 +1937,28 @@ function ComparisonModal({ t, onClose }) {
               </tr>
             </thead>
             <tbody>
-              {comparisonData.map((section, secIdx) => (
-                <tbody key={secIdx}>
-                  <tr className="bg-gradient-to-r from-asciende-purple/8 to-transparent">
-                    <td colSpan="3" className="py-4 px-2 font-krona font-bold text-asciende-purple text-sm uppercase tracking-widest">
-                      {section.category}
+              {comparisonData.map((section, secIdx) => [
+                <tr key={`section-${secIdx}`} className="bg-gradient-to-r from-asciende-purple/8 to-transparent">
+                  <td colSpan={3} className="py-4 px-2 font-krona font-bold text-asciende-purple text-sm uppercase tracking-widest">
+                    {section.category}
+                  </td>
+                </tr>,
+                ...section.features.map((feature, feaIdx) => (
+                  <tr key={`${secIdx}-${feaIdx}`} className="border-b border-gray-100 hover:bg-asciende-purple/3 transition duration-200">
+                    <td className="py-5 px-2 font-jost text-gray-700 font-medium break-words">{feature.name}</td>
+                    <td className="py-5 px-2 text-center align-middle">
+                      <span className={`font-jost font-semibold text-lg ${feature.basic === '✓' ? 'text-green-500' : feature.basic === '✕' ? 'text-gray-300' : 'text-gray-600'}`}>
+                        {feature.basic}
+                      </span>
+                    </td>
+                    <td className="py-5 px-2 text-center align-middle">
+                      <span className={`font-jost font-semibold text-lg ${feature.pro === '✓' ? 'text-green-500' : feature.pro === '✕' ? 'text-gray-300' : 'text-asciende-purple'}`}>
+                        {feature.pro}
+                      </span>
                     </td>
                   </tr>
-                  {section.features.map((feature, feaIdx) => (
-                    <tr key={feaIdx} className="border-b border-gray-100 hover:bg-asciende-purple/3 transition duration-200">
-                      <td className="py-5 px-2 font-jost text-gray-700 font-medium">{feature.name}</td>
-                      <td className="py-5 px-2 text-center">
-                        <span className={`font-jost font-semibold text-lg ${feature.basic === '✓' ? 'text-green-500' : feature.basic === '✕' ? 'text-gray-300' : 'text-gray-600'}`}>
-                          {feature.basic}
-                        </span>
-                      </td>
-                      <td className="py-5 px-2 text-center">
-                        <span className={`font-jost font-semibold text-lg ${feature.pro === '✓' ? 'text-green-500' : feature.pro === '✕' ? 'text-gray-300' : 'text-asciende-purple'}`}>
-                          {feature.pro}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              ))}
+                ))
+              ])}
             </tbody>
           </table>
         </div>
@@ -1967,7 +1970,7 @@ function ComparisonModal({ t, onClose }) {
               <p className="text-sm text-gray-600 font-jost font-medium">{m.comparisonBasicForever}</p>
             </div>
             <div className="p-6 rounded-2xl bg-gradient-to-br from-asciende-purple/10 to-asciende-purple/5 text-center border border-asciende-purple/30 hover:shadow-lg transition duration-300">
-              <p className="font-krona font-bold text-3xl text-asciende-purple mb-2">€49.99</p>
+              <p className="font-krona font-bold text-3xl text-asciende-purple mb-2">€14.99</p>
               <p className="text-sm text-gray-600 font-jost font-medium mb-1">{m.comparisonProMonth}</p>
               <p className="text-xs text-asciende-yellow font-krona font-bold">{m.comparisonLimited}</p>
             </div>

@@ -204,7 +204,7 @@ const translations = {
       proPrice: '€14.99',
       proPeriod: '/month',
       proYear: '€149.99/year',
-      proDesc: 'The complete Asciende experience for athletes who want tools, support, visibility, and AI-powered performance planning. Limited to 50 athletes.',
+      proDesc: 'The complete Asciende experience for athletes who want tools, support, visibility, and AI-powered performance planning.',
       proBenefits: [
         'Everything in Asciende Hub',
         'Possibility of support for your project or yourself',
@@ -536,7 +536,7 @@ const translations = {
       proPrice: '€14.99',
       proPeriod: '/mes',
       proYear: '€149.99/año',
-      proDesc: 'La experiencia completa de Asciende para atletas que buscan herramientas, apoyo, visibilidad y planificación de rendimiento con IA. Limitado a 50 atletas.',
+      proDesc: 'La experiencia completa de Asciende para atletas que buscan herramientas, apoyo, visibilidad y planificación de rendimiento con IA.',
       proBenefits: [
         'Todo lo incluido en Asciende Hub',
         'Posibilidad de apoyo para tu proyecto o para ti',
@@ -1971,7 +1971,6 @@ function ComparisonModal({ t, onClose }) {
             <div className="p-6 rounded-2xl bg-gradient-to-br from-asciende-purple/10 to-asciende-purple/5 text-center border border-asciende-purple/30 hover:shadow-lg transition duration-300">
               <p className="font-krona font-bold text-3xl text-asciende-purple mb-2">€14.99</p>
               <p className="text-sm text-gray-600 font-jost font-medium mb-1">{m.comparisonProMonth}</p>
-              <p className="text-xs text-asciende-yellow font-krona font-bold">{m.comparisonLimited}</p>
             </div>
           </div>
         </div>
@@ -2043,7 +2042,7 @@ function Memberships({ t }) {
             benefits={t.memberships.proBenefits}
             cta={t.memberships.proCTA}
             highlighted={true}
-            badge={t.memberships.comparisonLimited}
+            badge={null}
           />
         </div>
 

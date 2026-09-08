@@ -231,7 +231,7 @@ const translations = {
       catTraining: 'Training Planning',
       catNutrition: 'Nutrition System',
       catCommunity: 'Community & Support',
-      fTrainingPlanning: 'Training Planning',
+      fTrainingPlanning: 'Gym Planner',
       fWeeklyLoad: 'Weekly Load Adjustment',
       fAthleteStats: 'Athlete Statistics',
       fExerciseLibrary: 'Exercise Library',
@@ -563,7 +563,7 @@ const translations = {
       catTraining: 'Planificación de Entrenamiento',
       catNutrition: 'Sistema de Nutrición',
       catCommunity: 'Comunidad y Apoyo',
-      fTrainingPlanning: 'Planificación de Entrenamiento',
+      fTrainingPlanning: 'Planificador de Gimnasio',
       fWeeklyLoad: 'Ajuste de Carga Semanal',
       fAthleteStats: 'Estadísticas del Atleta',
       fExerciseLibrary: 'Biblioteca de Ejercicios',
@@ -1874,8 +1874,7 @@ function ComparisonModal({ t, onClose }) {
     {
       category: m.catTraining,
       features: [
-        { name: m.fTrainingPlanning, basic: '?', pro: m.valAIPersonalized },
-        { name: m.fWeeklyLoad, basic: '✕', pro: m.valAutomatic },
+        { name: m.fTrainingPlanning, basic: '✓', pro: '✓' },
         { name: m.fAthleteStats, basic: '✓', pro: '✓' },
         { name: m.fExerciseLibrary, basic: '✓', pro: '✓' },
         { name: m.fPlanningTools, basic: '✓', pro: '✓' },
@@ -1886,7 +1885,7 @@ function ComparisonModal({ t, onClose }) {
       category: m.catNutrition,
       features: [
         { name: m.fBodyComp, basic: '✓', pro: '✓' },
-        { name: m.fMealPlanner, basic: '✓', pro: '✓' },
+        { name: m.fMealPlanner, basic: '✕', pro: '✓' },
         { name: m.fNutritionGuides, basic: '✕', pro: '✓' },
         { name: m.fNutritionPlanner, basic: '✕', pro: '✓' },
       ]
